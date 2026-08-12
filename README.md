@@ -1,4 +1,4 @@
-# Spartracker
+# Saving App
 
 A Flutter app for saving towards several goals — using **one shared account**
 instead of separate jars. You deposit money once, then allocate it freely
