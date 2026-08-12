@@ -9,9 +9,11 @@ Fully offline. No account, no cloud. All data stays on the device.
 Available in **English and German**, switchable in the app.
 
 <p>
-  <img src="docs/screenshots/home_overview.png" width="260" alt="Home screen: account card and list of savings goals with progress bars" />
-  <img src="docs/screenshots/goal_detail.png" width="260" alt="Goal detail screen with progress ring and allocations" />
-  <img src="docs/screenshots/widget_card.png" width="260" alt="Android home screen widget showing a goal's progress" />
+<img width="1080" height="2400" alt="Screenshot_20260812-092137~2" src="https://github.com/user-attachments/assets/a3317148-fc3f-4572-829b-37f4c5d8d057" />
+<img width="1080" height="2400" alt="Screenshot_20260812-092418~2" src="https://github.com/user-attachments/assets/f390052a-d9d6-4f96-ab25-e84b7b34cccc" />
+<img width="1080" height="2400" alt="Screenshot_20260812-083943~2" src="https://github.com/user-attachments/assets/795042e2-e234-4239-a44e-58771b6f1924" />
+
+
 </p>
 
 *(Amounts blurred out on purpose — these are screenshots of my own, real
@@ -84,7 +86,6 @@ wider progress card.
 
 <p>
   <img src="docs/screenshots/widget_ring.png" width="160" alt="Compact ring widget on the Android home screen" />
-  <img src="docs/screenshots/widget_card.png" width="260" alt="Wide progress card widget on the Android home screen" />
 </p>
 
 - Added like any Android widget: long-press the home screen → Widgets →
