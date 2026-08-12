@@ -8,12 +8,10 @@ Fully offline. No account, no cloud. All data stays on the device.
 
 Available in **English and German**, switchable in the app.
 
-<p>
-<img width="1080" height="2400" alt="Screenshot_20260812-092137~2" src="https://github.com/user-attachments/assets/a3317148-fc3f-4572-829b-37f4c5d8d057" />
-<img width="1080" height="2400" alt="Screenshot_20260812-092418~2" src="https://github.com/user-attachments/assets/f390052a-d9d6-4f96-ab25-e84b7b34cccc" />
-<img width="1080" height="2400" alt="Screenshot_20260812-083943~2" src="https://github.com/user-attachments/assets/795042e2-e234-4239-a44e-58771b6f1924" />
-
-
+<p align="center">
+<img src="https://github.com/user-attachments/assets/a3317148-fc3f-4572-829b-37f4c5d8d057" width="30%" alt="Home screen with account balance and goals" />
+<img src="https://github.com/user-attachments/assets/f390052a-d9d6-4f96-ab25-e84b7b34cccc" width="30%" alt="Goal detail screen with progress ring and allocations" />
+<img src="https://github.com/user-attachments/assets/795042e2-e234-4239-a44e-58771b6f1924" width="30%" alt="Account screen with transaction history" />
 </p>
 
 *(Amounts blurred out on purpose — these are screenshots of my own, real
@@ -84,8 +82,8 @@ quietly glossing over it.
 Each goal can be pinned to the home screen, in two sizes: a compact ring and a
 wider progress card.
 
-<p>
-  <img src="docs/screenshots/widget_ring.png" width="160" alt="Compact ring widget on the Android home screen" />
+<p align="center">
+  <img src="docs/screenshots/widget_ring.png" width="25%" alt="Compact ring widget on the Android home screen" />
 </p>
 
 - Added like any Android widget: long-press the home screen → Widgets →
