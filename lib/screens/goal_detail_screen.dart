@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/database.dart';
+import '../l10n/l10n_labels.dart';
 import '../models/goal_style.dart';
 import '../providers/account_provider.dart';
 import '../providers/database_provider.dart';
@@ -29,6 +30,8 @@ class GoalDetailScreen extends ConsumerWidget {
     SavingsGoal goal,
     double alreadyAllocated,
   ) async {
+    final t = l10n(context);
+    final formats = Formats.of(context);
     final available = ref.read(availableAmountProvider);
     final result = await AllocationSheet.show(
       context,
@@ -51,7 +54,7 @@ class GoalDetailScreen extends ConsumerWidget {
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${formatEuro(result.amount)} zugeteilt')),
+        SnackBar(content: Text(t.allocationDone(formats.money(result.amount)))),
       );
     }
   }
@@ -91,14 +94,15 @@ class GoalDetailScreen extends ConsumerWidget {
     WidgetRef ref,
     Allocation allocation,
   ) async {
+    final t = l10n(context);
     await ref.read(allocationsDaoProvider).deleteAllocation(allocation.id);
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Zuteilung gelöscht'),
+        content: Text(t.detailAllocationDeleted),
         action: SnackBarAction(
-          label: 'Rückgängig',
+          label: t.commonUndo,
           onPressed: () {
             ref
                 .read(allocationsDaoProvider)
@@ -156,9 +160,11 @@ class GoalDetailScreen extends ConsumerWidget {
     final url = goal.productUrl;
     if (url == null) return;
 
+    final t = l10n(context);
+    final formats = Formats.of(context);
     final messenger = ScaffoldMessenger.of(context);
     messenger.showSnackBar(
-      const SnackBar(content: Text('Preis wird gesucht ...')),
+      SnackBar(content: Text(t.detailSearchingPrice)),
     );
 
     try {
@@ -179,24 +185,25 @@ class GoalDetailScreen extends ConsumerWidget {
           );
       messenger.showSnackBar(
         SnackBar(
-          content: Text(
-            'Zielbetrag aktualisiert: ${formatEuro(result.price!)}',
-          ),
+          content: Text(t.detailPriceUpdated(formats.money(result.price!))),
         ),
       );
     } on PriceLookupException catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text(e.message)));
+      messenger.showSnackBar(
+        SnackBar(content: Text(t.priceLookupMessage(e))),
+      );
     }
   }
 
   Future<void> _openLink(BuildContext context, String url) async {
+    final t = l10n(context);
     final uri = Uri.tryParse(url.startsWith('http') ? url : 'https://$url');
     if (uri == null) return;
     final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!ok && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Link konnte nicht geöffnet werden')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.detailLinkFailed)));
     }
   }
 
@@ -205,24 +212,21 @@ class GoalDetailScreen extends ConsumerWidget {
     WidgetRef ref,
     SavingsGoal goal,
   ) async {
+    final t = l10n(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.inventory_2_outlined),
-        title: const Text('Sparziel archivieren?'),
-        content: Text(
-          '"${goal.name}" wird ausgeblendet. Das zugeteilte Geld bleibt '
-          'reserviert - lösche vorher die Zuteilungen, wenn du es wieder '
-          'frei verfügbar haben willst.',
-        ),
+        title: Text(t.archiveTitle),
+        content: Text(t.archiveBody(goal.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Abbrechen'),
+            child: Text(t.commonCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Archivieren'),
+            child: Text(t.archiveMenu),
           ),
         ],
       ),
@@ -241,23 +245,23 @@ class GoalDetailScreen extends ConsumerWidget {
     SavingsGoal goal,
     double allocated,
   ) async {
+    final t = l10n(context);
+    final formats = Formats.of(context);
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.delete_outline),
-        title: const Text('Sparziel löschen?'),
+        title: Text(t.deleteGoalTitle),
         content: Text(
           allocated > 0
-              ? '"${goal.name}" wird mitsamt allen Zuteilungen gelöscht.\n\n'
-                    '${formatEuro(allocated)} gehen zurück aufs Konto '
-                    'und sind danach wieder frei verfügbar.'
-              : '"${goal.name}" wird gelöscht. Es ist kein Geld zugeteilt, '
-                    'der Kontostand ändert sich also nicht.',
+              ? t.deleteGoalBodyWithMoney(goal.name, formats.money(allocated))
+              : t.deleteGoalBodyEmpty(goal.name),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Abbrechen'),
+            child: Text(t.commonCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
@@ -265,7 +269,7 @@ class GoalDetailScreen extends ConsumerWidget {
               foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Löschen'),
+            child: Text(t.commonDelete),
           ),
         ],
       ),
@@ -285,12 +289,14 @@ class GoalDetailScreen extends ConsumerWidget {
       SnackBar(
         content: Text(
           deleted.releasedAmount > 0
-              ? '"${goal.name}" gelöscht · '
-                    '${formatEuro(deleted.releasedAmount)} zurück aufs Konto'
-              : '"${goal.name}" gelöscht',
+              ? t.goalDeletedWithMoney(
+                  goal.name,
+                  formats.money(deleted.releasedAmount),
+                )
+              : t.goalDeleted(goal.name),
         ),
         action: SnackBarAction(
-          label: 'Rückgängig',
+          label: t.commonUndo,
           onPressed: () {
             ref.read(goalsDaoProvider).restoreGoal(deleted);
           },
@@ -301,6 +307,7 @@ class GoalDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = l10n(context);
     final goalAsync = ref.watch(goalProvider(goalId));
     final allocationsAsync = ref.watch(allocationsForGoalProvider(goalId));
     final totalAsync = ref.watch(goalTotalProvider(goalId));
@@ -309,7 +316,8 @@ class GoalDetailScreen extends ConsumerWidget {
     return Scaffold(
       body: goalAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Fehler: $error')),
+        error: (error, stack) =>
+            Center(child: Text(t.commonErrorWithMessage('$error'))),
         data: (goal) {
           final total = totalAsync.valueOrNull ?? 0;
           return CustomScrollView(
@@ -338,37 +346,37 @@ class GoalDetailScreen extends ConsumerWidget {
                       }
                     },
                     itemBuilder: (context) => [
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'edit',
                         child: ListTile(
-                          leading: Icon(Icons.edit_outlined),
-                          title: Text('Bearbeiten'),
+                          leading: const Icon(Icons.edit_outlined),
+                          title: Text(t.commonEdit),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
                       if (goal.productUrl != null) ...[
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'open-link',
                           child: ListTile(
-                            leading: Icon(Icons.open_in_new),
-                            title: Text('Produktseite öffnen'),
+                            leading: const Icon(Icons.open_in_new),
+                            title: Text(t.detailOpenProductPage),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'refresh-price',
                           child: ListTile(
-                            leading: Icon(Icons.refresh),
-                            title: Text('Preis aktualisieren'),
+                            leading: const Icon(Icons.refresh),
+                            title: Text(t.detailRefreshPrice),
                             contentPadding: EdgeInsets.zero,
                           ),
                         ),
                       ],
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'archive',
                         child: ListTile(
-                          leading: Icon(Icons.inventory_2_outlined),
-                          title: Text('Archivieren'),
+                          leading: const Icon(Icons.inventory_2_outlined),
+                          title: Text(t.archiveMenu),
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
@@ -380,7 +388,7 @@ class GoalDetailScreen extends ConsumerWidget {
                             color: Theme.of(context).colorScheme.error,
                           ),
                           title: Text(
-                            'Löschen',
+                            t.commonDelete,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.error,
                             ),
@@ -409,7 +417,7 @@ class GoalDetailScreen extends ConsumerWidget {
                       Spacing.xs,
                     ),
                     child: Text(
-                      'Zuteilungen',
+                      t.detailAllocationsSection,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
@@ -419,7 +427,7 @@ class GoalDetailScreen extends ConsumerWidget {
                 loading: () => const [
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(32),
+                      padding: EdgeInsets.all(Spacing.xl),
                       child: Center(child: CircularProgressIndicator()),
                     ),
                   ),
@@ -427,24 +435,28 @@ class GoalDetailScreen extends ConsumerWidget {
                 error: (error, stack) => [
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.all(32),
-                      child: Center(child: Text('Fehler: $error')),
+                      padding: const EdgeInsets.all(Spacing.xl),
+                      child: Center(
+                        child: Text(t.commonErrorWithMessage('$error')),
+                      ),
                     ),
                   ),
                 ],
                 data: (allocations) {
                   if (allocations.isEmpty) {
-                    return const [
+                    return [
                       // Unten Platz lassen, damit der FAB den Text
                       // nicht überdeckt.
                       SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.only(top: 8, bottom: 120),
+                          padding: const EdgeInsets.only(
+                            top: Spacing.xs,
+                            bottom: 120,
+                          ),
                           child: EmptyState(
                             icon: Icons.savings_outlined,
-                            title: 'Noch nichts zugeteilt',
-                            subtitle:
-                                'Teile diesem Ziel Geld vom Sparkonto zu.',
+                            title: t.detailEmptyTitle,
+                            subtitle: t.detailEmptySubtitle,
                           ),
                         ),
                       ),
@@ -463,8 +475,8 @@ class GoalDetailScreen extends ConsumerWidget {
                             id: allocation.id,
                             amount: allocation.amount,
                             title: allocation.amount < 0
-                                ? 'Zurück aufs Konto'
-                                : 'Zuteilung',
+                                ? t.detailReturnedToAccount
+                                : t.detailAllocation,
                             date: allocation.date,
                             note: allocation.note,
                             onTap: () =>
@@ -491,7 +503,7 @@ class GoalDetailScreen extends ConsumerWidget {
                 totalAsync.valueOrNull ?? 0,
               ),
               icon: const Icon(Icons.add),
-              label: const Text('Zuteilen'),
+              label: Text(t.detailAssignFab),
             )
           : null,
     );
@@ -507,7 +519,9 @@ class _ProgressHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
+    final formats = Formats.of(context);
     final palette = goalPalette(context, goal.colorValue);
     final progress = goal.targetAmount <= 0
         ? 0.0
@@ -530,10 +544,11 @@ class _ProgressHeader extends StatelessWidget {
             // Information. Für Screenreader wird er deshalb zu einem
             // einzigen, sprechenden Element zusammengefasst.
             Semantics(
-              label: 'Fortschritt $percent Prozent',
-              value:
-                  '${formatEuro(allocated)} von '
-                  '${formatEuro(goal.targetAmount)}',
+              label: t.detailProgressSemantics(percent),
+              value: t.goalCardOf(
+                formats.money(allocated),
+                formats.money(goal.targetAmount),
+              ),
               excludeSemantics: true,
               child: SizedBox(
                 width: 190,
@@ -574,14 +589,14 @@ class _ProgressHeader extends StatelessWidget {
             ),
             const SizedBox(height: Spacing.lg),
             Text(
-              formatEuro(allocated),
+              formats.money(allocated),
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: Spacing.xxs),
             Text(
-              'von ${formatEuro(goal.targetAmount)}',
+              t.detailOfAmount(formats.money(goal.targetAmount)),
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -598,8 +613,8 @@ class _ProgressHeader extends StatelessWidget {
               ),
               child: Text(
                 remaining <= 0
-                    ? 'Ziel erreicht 🎉'
-                    : 'Noch ${formatEuro(remaining)}',
+                    ? t.detailGoalReached
+                    : t.detailRemaining(formats.money(remaining)),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: palette.onContainer,
                 ),

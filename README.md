@@ -1,187 +1,270 @@
 # Spartracker
 
-Eine Flutter-App zum Sparen auf mehrere Ziele – mit einem **gemeinsamen Konto**
-statt getrennter Sparschweine. Geld wird einmal eingezahlt und danach frei auf
-Sparziele verteilt.
+A Flutter app for saving towards several goals — using **one shared account**
+instead of separate jars. You deposit money once, then allocate it freely
+across your goals.
 
-Vollständig offline, ohne Konto, ohne Cloud. Alle Daten bleiben auf dem Gerät.
+Fully offline. No account, no cloud. All data stays on the device.
+
+Available in **English and German**, switchable in the app.
+
+<p>
+  <img src="docs/screenshots/home_overview.png" width="260" alt="Home screen: account card and list of savings goals with progress bars" />
+  <img src="docs/screenshots/goal_detail.png" width="260" alt="Goal detail screen with progress ring and allocations" />
+  <img src="docs/screenshots/widget_card.png" width="260" alt="Android home screen widget showing a goal's progress" />
+</p>
+
+*(Amounts blurred out on purpose — these are screenshots of my own, real
+savings goals, not sample data.)*
 
 ---
 
-## Das Grundprinzip
+## The core idea
 
-Die meisten Spar-Apps verwalten pro Ziel einen eigenen Topf. Spartracker trennt
-stattdessen **wo das Geld liegt** von **wofür es gedacht ist**:
+Most savings apps keep a separate pot per goal. Spartracker instead separates
+**where the money is** from **what it is meant for**:
 
 ```
-        Einzahlungen                       Zuteilungen
-   (Geburtstag, Ferienjob, …)         (reserviert für ein Ziel)
+         Deposits                          Allocations
+   (birthday, summer job, …)          (reserved for one goal)
               │                                  │
               ▼                                  ▼
       ┌───────────────┐                  ┌────────────────┐
-      │  Sparkonto    │ ───────────────► │  🚲 Fahrrad    │  150 €
-      │   300,00 €    │                  ├────────────────┤
-      └───────────────┘ ───────────────► │  🎧 Kopfhörer  │   50 €
+      │Savings account│ ───────────────► │  🚲 Bicycle    │  150 €
+      │    300,00 €   │                  ├────────────────┤
+      └───────────────┘ ───────────────► │  🎧 Headphones │   50 €
               │                          └────────────────┘
               │
-       frei verfügbar: 100 €
+          available: 100 €
 ```
 
-Daraus ergeben sich drei Werte, die überall in der App auftauchen:
+This produces three numbers that appear throughout the app:
 
-| Wert | Bedeutung |
+| Value | Meaning |
 | --- | --- |
-| **Kontostand** | Summe aller Ein- und Auszahlungen |
-| **Zugeteilt** | Summe des Geldes, das Zielen zugeordnet ist |
-| **Frei verfügbar** | Kontostand − Zugeteilt |
+| **Balance** | Sum of all deposits and withdrawals |
+| **Allocated** | Sum of money assigned to goals |
+| **Available** | Balance − Allocated |
 
-Wichtig: Eine Zuteilung verschiebt kein Geld, sie *reserviert* es. Der
-Kontostand ändert sich dabei nicht. Löscht man ein Ziel, verschwindet nur die
-Reservierung – das Geld ist sofort wieder frei verfügbar.
+Important: an allocation does not move money, it *reserves* it. The balance
+stays the same. Deleting a goal removes only the reservation — the money is
+immediately available again.
 
-Wird mehr zugeteilt, als auf dem Konto liegt (etwa nach einer nachträglichen
-Entnahme), wird „frei verfügbar" negativ. Die App blendet dann eine Warnung
-ein, statt den Wert stillschweigend zu beschönigen.
-
----
-
-## Funktionen
-
-- **Sparkonto** mit Buchungshistorie – Ein- und Auszahlungen mit frei
-  eingebbarer Quelle, Datum und Notiz
-- **Sparziele** mit Zielbetrag, Symbol und Farbe; Fortschritt als Ring und
-  Balken
-- **Zuteilen und Zurückholen** von Geld, mit Schnellauswahl („Rest bis Ziel",
-  „Alles")
-- **Produktlink mit Preissuche** – der Zielbetrag kann automatisch von der
-  Produktseite gelesen werden (siehe [Grenzen](#preissuche-was-sie-kann-und-was-nicht))
-- **Löschen mit Rückgängig** für Buchungen, Zuteilungen und ganze Sparziele
-- **Archivieren** von Zielen, die nicht mehr in der Übersicht stehen sollen
-- **Geld zurücksetzen** – leert alle Buchungen und Zuteilungen, behält die Ziele
-- **73 Symbole** in sieben Kategorien und acht Farbtöne pro Ziel
-- **Material You** – die App übernimmt die Systemfarbe (Wallpaper auf
-  Android 12+, Akzentfarbe auf Windows) und folgt dem Hell-/Dunkelmodus
-- Deutsche Oberfläche samt Währungs- und Datumsformat (`1.299,00 €`)
+If more is allocated than the account holds (for example after a later
+withdrawal), "available" goes negative. The app shows a warning instead of
+quietly glossing over it.
 
 ---
 
-## Tech-Stack
+## Features
 
-| Bereich | Wahl | Warum |
+- **Savings account** with a transaction history — deposits and withdrawals
+  with a free-text source, date and note
+- **Savings goals** with a target amount, symbol and colour; progress shown as
+  a ring and a bar
+- **Allocate and reclaim** money, with quick picks ("Remaining", "All")
+- **Product link with price lookup** — the target amount can be read
+  automatically from a product page (see [limits](#price-lookup-what-it-can-and-cannot-do))
+- **Delete with undo** for transactions, allocations and whole goals
+- **Archive** goals you no longer want in the overview
+- **Reset money** — clears all transactions and allocations, keeps the goals
+- **73 symbols** in seven categories and eight colours per goal
+- **Material You** — the app can follow your system colour (wallpaper on
+  Android 12+, accent colour on Windows) or use a colour you pick yourself
+- Follows the system light/dark mode
+- Locale-aware currency and date formatting (`1.299,00 €` vs `€1,299.00`)
+- **Home screen widgets** on Android — see below
+
+---
+
+## Home screen widgets (Android)
+
+Each goal can be pinned to the home screen, in two sizes: a compact ring and a
+wider progress card.
+
+<p>
+  <img src="docs/screenshots/widget_ring.png" width="160" alt="Compact ring widget on the Android home screen" />
+  <img src="docs/screenshots/widget_card.png" width="260" alt="Wide progress card widget on the Android home screen" />
+</p>
+
+- Added like any Android widget: long-press the home screen → Widgets →
+  Spartracker, then pick which goal it should track in a small configuration
+  screen.
+- Tapping the widget opens that goal in the app.
+- If there are no goals yet, the widget shows a hint instead of stale data.
+- Widget text follows the **language set in the app**, not the system locale,
+  and uses the same number formatting as the rest of the app.
+- Colour comes from the goal's own tonal scheme, matching the card in the app;
+  the frame follows the system's Material You colours on Android 12+.
+
+Built with **Jetpack Glance** (`androidx.glance`) natively in Kotlin — app
+widgets run outside the Flutter engine, so this part of the app is plain
+Android. The widget reads goal data that the Flutter side writes out after
+every change (see `lib/services/home_widget_service.dart`).
+
+---
+
+## Settings
+
+| Setting | Options |
+| --- | --- |
+| **System colours** | On — follows wallpaper / system accent. Off — uses the colour you choose. The switch is disabled on devices that provide no system colours. |
+| **Your colour** | Eight seed colours; a full tonal scheme is derived from the one you pick. Choosing one turns system colours off automatically, otherwise the choice would have no visible effect. |
+| **Language** | System, Deutsch, or English. Applies immediately — no restart. |
+
+Settings live in `shared_preferences`, not in the database: they are needed
+before the database is open, and "reset money" must not wipe them.
+
+---
+
+## Tech stack
+
+| Area | Choice | Why |
 | --- | --- | --- |
-| Framework | Flutter 3.44 / Dart 3.12 | eine Codebasis für Mobile und Desktop |
-| State | [Riverpod](https://riverpod.dev) 2.6 | `StreamProvider` auf Datenbank-Streams: die UI aktualisiert sich von selbst |
-| Datenbank | [Drift](https://drift.simonbinder.eu) 2.22 (SQLite) | typsichere Queries zur Compile-Zeit, saubere Migrationen |
-| Farben | `dynamic_color` 1.7 | Systemfarben für Material You |
-| Preissuche | `http` + `html` | HTML laden und strukturierte Metadaten auslesen |
+| Framework | Flutter 3.44 / Dart 3.12 | one codebase for mobile and desktop |
+| State | [Riverpod](https://riverpod.dev) 2.6 | `StreamProvider` over database streams: the UI updates itself |
+| Database | [Drift](https://drift.simonbinder.eu) 2.22 (SQLite) | compile-time checked queries, clean migrations |
+| Colours | `dynamic_color` 1.7 | system colours for Material You |
+| Translations | `flutter_localizations` + ARB / `gen-l10n` | the standard Flutter approach |
+| Settings | `shared_preferences` | small key-value store, available before first frame |
+| Price lookup | `http` + `html` | fetch HTML and read structured metadata |
+| Home screen widget | Jetpack Glance (Kotlin, Android only) | native `GlanceAppWidget`s, fed by data the app writes on change |
 
 ---
 
-## Projektstruktur
+## Project layout
 
 ```
 lib/
-├── data/                  Datenbank und Zugriffsschicht
-│   ├── database.dart        Tabellen, Schema-Version, Migrationen
-│   ├── goals_dao.dart       Sparziele (inkl. Löschen mit Wiederherstellung)
-│   ├── account_dao.dart     Kontobuchungen, Kontostand, Reset
-│   └── allocations_dao.dart Zuteilungen
+├── data/                  Database and access layer
+│   ├── database.dart        Tables, schema version, migrations
+│   ├── goals_dao.dart       Goals (incl. delete with restore)
+│   ├── account_dao.dart     Transactions, balance, reset
+│   └── allocations_dao.dart Allocations
+├── l10n/
+│   ├── app_en.arb           English source strings
+│   ├── app_de.arb           German translations
+│   ├── gen/                 Generated — do not edit
+│   └── l10n_labels.dart     Translates model keys (symbols, colours)
 ├── models/
-│   ├── goal_style.dart      Symbol-Katalog, Farbauswahl, tonale Paletten
-│   └── entry_source.dart    Vorschläge für die Quelle einer Buchung
-├── providers/             Riverpod-Provider (reaktive Sicht auf die DAOs)
+│   └── goal_style.dart      Symbol catalogue, colour choices, tonal palettes
+├── providers/             Riverpod providers (reactive view of the DAOs)
 ├── screens/
-│   ├── home_screen.dart     Kontokarte + Liste der Sparziele
-│   ├── account_screen.dart  Kontostand und alle Buchungen
-│   └── goal_detail_screen.dart  Fortschritt und Zuteilungen eines Ziels
+│   ├── home_screen.dart     Account card + list of goals
+│   ├── account_screen.dart  Balance and all transactions
+│   ├── goal_detail_screen.dart  Progress and allocations of one goal
+│   └── settings_screen.dart Colours and language
 ├── services/
-│   └── price_lookup.dart    Preisermittlung aus Produktseiten
+│   ├── price_lookup.dart    Price extraction from product pages
+│   └── home_widget_service.dart  Writes goal data for the Android widgets
+├── settings/
+│   └── app_settings.dart    Settings model and persistence
 ├── theme/
-│   ├── app_theme.dart       Material-3-Theme
-│   └── tokens.dart          Abstands-/Form-Tokens, Fensterklassen
-├── utils/format.dart      Deutsche Währungsformatierung
-└── widgets/               Karten, Listeneinträge, BottomSheets
+│   ├── app_theme.dart       Material 3 theme
+│   └── tokens.dart          Spacing/shape tokens, window size classes
+├── utils/format.dart      Locale-aware money and date formatting
+└── widgets/               Cards, list tiles, bottom sheets
 ```
 
-Die Schichten sind bewusst getrennt: Widgets kennen keine Datenbank, DAOs kennen
-kein Flutter. Dazwischen stehen die Provider.
+Layers are deliberately separate: widgets know nothing about the database,
+DAOs know nothing about Flutter. Providers sit in between.
+
+Note that no layer below the UI holds user-facing text. Even the price lookup
+returns a typed error reason rather than a message — the UI decides the
+wording and the language.
 
 ---
 
-## Loslegen
+## Getting started
 
-Voraussetzung: [Flutter SDK](https://docs.flutter.dev/get-started/install)
-3.44 oder neuer.
+Requires the [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.44
+or newer.
 
 ```bash
 flutter pub get
 
-# Drift-Code erzeugen (nach jeder Änderung an database.dart nötig)
+# Generate Drift code (needed after every change to database.dart)
 dart run build_runner build
 
 flutter run
 ```
 
-Getestet auf **Android** und **Windows**. Die übrigen Plattformordner sind zwar
-angelegt, aber ungeprüft – für **Web** genügt das nicht: Drift braucht dort eine
-eigene SQLite-WASM-Einrichtung, die hier fehlt.
+Translations are generated automatically by `flutter pub get` and `flutter run`
+(`generate: true` in `pubspec.yaml`). To regenerate them on their own:
+
+```bash
+flutter gen-l10n
+```
+
+Tested on **Android** and **Windows**. The other platform folders exist but are
+unverified — and **web** will not work as-is: Drift needs a separate SQLite
+WASM setup that is not included here.
+
+### Adding a language
+
+1. Copy `lib/l10n/app_en.arb` to `lib/l10n/app_<code>.arb` and translate the
+   values.
+2. Add the language to `AppLanguage` in `lib/settings/app_settings.dart`.
+3. Run `flutter gen-l10n`.
+
+`test/goal_style_test.dart` then checks the new language automatically: it runs
+over every supported locale and fails if a symbol, group or colour is missing a
+translation.
 
 ---
 
-## Daten und Speicherort
+## Data and storage location
 
-Die Datenbank liegt im privaten Verzeichnis der App:
+The database lives in the app's private directory:
 
-| Plattform | Pfad |
+| Platform | Path |
 | --- | --- |
 | Android | `/data/data/com.spartracker.spartracker/app_flutter/spartracker.sqlite` |
 | Windows | `%USERPROFILE%\Documents\spartracker.sqlite` |
 
-Jedes Gerät hat seine **eigene** Datenbank – es gibt keine Synchronisierung
-zwischen Handy und PC.
+Each device has its **own** database — there is no sync between phone and PC.
 
-Auf einem Debug-Build lässt sich die Android-Datei so herausziehen:
+On a debug build you can pull the Android file with:
 
 ```bash
 adb exec-out run-as com.spartracker.spartracker \
   cat app_flutter/spartracker.sqlite > spartracker.sqlite
 ```
 
-### Schema-Historie
+### Schema history
 
-| Version | Änderung |
+| Version | Change |
 | --- | --- |
-| 1 | Einträge hingen direkt am Sparziel |
-| 2 | Umstellung auf zentrales Konto: jeder alte Eintrag wurde in eine Buchung **und** eine Zuteilung aufgeteilt, sodass Kontostand und Zielfortschritt erhalten blieben |
-| 3 | Symbole von Emojis auf Material-Icons; gespeichert wird ein stabiler Schlüssel (`bike`) statt eines Icon-Codepoints |
+| 1 | Entries were attached directly to a goal |
+| 2 | Moved to a central account: every old entry became a transaction **and** an allocation, so both balance and goal progress survived |
+| 3 | Symbols moved from emoji to Material icons; a stable key (`bike`) is stored instead of an icon code point |
 
-Zu Version 3: Ein Codepoint würde bedeuten, `IconData` zur Laufzeit zu bauen –
-dann kann Flutter die Icon-Schriften nicht mehr ausdünnen und der Release-Build
-bricht ab. Im Debug-Modus fällt das nie auf, deshalb der Schlüssel.
+On version 3: storing a code point would mean building `IconData` at runtime,
+which stops Flutter from tree-shaking the icon fonts and breaks the release
+build. Debug builds never reveal this — hence the key.
 
-Die Migrationen sind durch Tests abgedeckt, die eine echte Datenbank im alten
-Schema anlegen und den kompletten Weg v1 → v2 → v3 durchlaufen.
+Migrations are covered by tests that create a real database in the old schema
+and run the full v1 → v2 → v3 path.
 
 ---
 
-## Preissuche: was sie kann und was nicht
+## Price lookup: what it can and cannot do
 
-Zum Sparziel lässt sich ein Produktlink hinterlegen; die App liest daraus den
-Preis und trägt ihn als Zielbetrag ein.
+You can attach a product link to a goal; the app reads the price from it and
+fills in the target amount.
 
-**Ausgewertet werden**, in dieser Reihenfolge:
+**It reads**, in this order:
 
-1. JSON-LD nach `schema.org/Product` (auch verschachtelt in `@graph`)
-2. Meta-Tags: `product:price:amount`, `og:price:amount`
+1. JSON-LD following `schema.org/Product` (including nested `@graph`)
+2. Meta tags: `product:price:amount`, `og:price:amount`
 3. Microdata: `itemprop="price"`
 
-Deutsche wie englische Schreibweisen werden erkannt (`1.299,00 €` und
+Both German and English number formats are understood (`1.299,00 €` and
 `1,299.00`).
 
-**Nicht funktionieren wird es**, wenn der Shop den Preis erst per JavaScript
-nachlädt oder automatische Zugriffe blockiert – bei Amazon etwa meist. In dem
-Fall erscheint eine klare Meldung und der Preis wird von Hand eingetragen.
-Es wird **nie** ein geratener Wert eingesetzt.
+**It will not work** when a shop renders the price via JavaScript or blocks
+automated access — Amazon usually does both. In that case a clear message
+appears and you enter the price yourself. A guessed value is **never** used.
 
 ---
 
@@ -192,41 +275,39 @@ flutter analyze
 flutter test
 ```
 
-Aktuell **42 Tests**:
+Currently **58 tests**:
 
-| Datei | Prüft |
+| File | Covers |
 | --- | --- |
-| `migration_test.dart` | Schema-Migrationen an einer echten SQLite-Datei; Geldfreigabe beim Löschen, Rückgängig, Reset, Cascade |
-| `price_lookup_test.dart` | Preiserkennung gegen einen Fake-HTTP-Client, inkl. Blockade, fehlendem Preis und kaputtem JSON-LD |
-| `adaptive_layout_test.dart` | Fensterklassen, Seitenränder, Begrenzung der Inhaltsbreite |
-| `goal_style_test.dart` | Symbol-Katalog: eindeutige Schlüssel, Rückfallebene, konstante `IconData` |
-| `widget_test.dart` | Smoke-Test des Startbildschirms |
+| `migration_test.dart` | Schema migrations against a real SQLite file; money released on delete, undo, reset, cascade |
+| `price_lookup_test.dart` | Price extraction against a fake HTTP client, including blocking, missing price and broken JSON-LD |
+| `settings_test.dart` | Defaults, persistence across restarts, and that picking a colour turns system colours off |
+| `adaptive_layout_test.dart` | Window size classes, page margins, content width cap |
+| `goal_style_test.dart` | Symbol catalogue and its translations in every supported language |
+| `widget_test.dart` | Start-up smoke test plus German and English rendering |
 
 ---
 
 ## Design
 
-Die Oberfläche folgt Material Design 3:
+The UI follows Material Design 3:
 
-- **Farbe** kommt aus `ColorScheme`-Rollen, nie aus festen Hex-Werten. Jedes
-  Sparziel bekommt aus seiner Farbe ein eigenes tonales Schema, das per
-  `harmonizeWith()` zur Systemfarbe hin ausgerichtet wird – Grün bleibt grün,
-  passt aber zum Rest.
-- **Tiefe** entsteht über tonale Flächen, nicht über Schatten.
-- **Abstände und Formen** stammen aus `theme/tokens.dart` (4dp-Raster,
-  MD3-Shape-Skala) statt aus verstreuten Zahlen im Widget-Code.
-- **Adaptiv**: Ränder richten sich nach der Fensterklasse, auf breiten Fenstern
-  wird der Inhalt auf 840dp begrenzt und zentriert, statt über den ganzen
-  Bildschirm zu laufen.
-- **Bedienbarkeit**: Berührungsziele mindestens 48dp; Karten, Fortschrittsringe
-  und Farbfelder haben sprechende Labels für Screenreader.
+- **Colour** comes from `ColorScheme` roles, never from fixed hex values. Each
+  goal derives its own tonal scheme from its colour, aligned towards the app
+  colour with `harmonizeWith()` — green stays green but fits the rest.
+- **Depth** comes from tonal surfaces, not shadows.
+- **Spacing and shape** come from `theme/tokens.dart` (4dp grid, MD3 shape
+  scale) rather than scattered numbers in widget code.
+- **Adaptive**: margins follow the window size class; on wide windows content
+  is capped at 840dp and centred instead of stretching across the screen.
+- **Accessibility**: touch targets are at least 48dp; cards, progress rings and
+  colour swatches carry meaningful screen-reader labels.
 
 ---
 
-## Grenzen
+## Limits
 
-- Keine Synchronisierung zwischen Geräten, kein Backup-Export
-- Web wird nicht unterstützt (siehe oben)
-- Die Preissuche ist bewusst „best effort" und ersetzt keine Shop-API
-- „Geld zurücksetzen" lässt sich nicht rückgängig machen – anders als das
-  Löschen einzelner Einträge
+- No sync between devices, no backup export
+- Web is not supported (see above)
+- The price lookup is deliberately best-effort and is no substitute for a shop API
+- "Reset money" cannot be undone — unlike deleting individual entries

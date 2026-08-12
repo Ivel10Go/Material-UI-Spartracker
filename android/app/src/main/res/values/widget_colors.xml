@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Farben der Vorschau im Widget-Auswahlmenü (hell, ohne dynamische Farben).
+
+  Die Vorschau ist ein statisches XML-Layout - sie kann die Farben deshalb
+  nicht wie das Widget selbst zur Laufzeit aus dem Farbschema holen. Ab
+  Android 12 ersetzt values-v31 diese Werte durch die Wallpaper-Farben.
+-->
+<resources>
+    <color name="widget_preview_surface">#FEF7FF</color>
+    <color name="widget_preview_container">#EADDFF</color>
+    <color name="widget_preview_on_container">#21005D</color>
+    <color name="widget_preview_accent">#6750A4</color>
+    <color name="widget_preview_on_surface">#1D1B20</color>
+    <color name="widget_preview_on_surface_variant">#49454F</color>
+    <color name="widget_preview_track">#E8DEF8</color>
+</resources>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Beschreibung des Homescreen-Widgets.
+
+  Die Zellenangaben (targetCell*) gelten ab Android 12 und beschreiben die
+  Wunschgröße im Raster des Pixel-Launchers; minWidth/minHeight sind der
+  Rückfall für ältere Launcher. `reconfigurable` blendet im Kontextmenü des
+  Widgets den Punkt für die Einstellungen ein - dort lässt sich das Sparziel
+  später wechseln.
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.spartracker.spartracker.widget.SavingsGoalWidgetConfigActivity"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minHeight="110dp"
+    android:minResizeHeight="100dp"
+    android:minResizeWidth="140dp"
+    android:minWidth="180dp"
+    android:maxResizeHeight="300dp"
+    android:maxResizeWidth="360dp"
+    android:previewLayout="@layout/widget_savings_goal_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="3"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable" />

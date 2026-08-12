@@ -17,6 +17,26 @@ class DeletedGoal {
       allocations.fold(0.0, (sum, a) => sum + a.amount);
 }
 
+/// Ein Sparziel zusammen mit dem bereits zugeteilten Betrag.
+///
+/// Die Übersicht liest beides sonst getrennt (ein Stream pro Ziel). Für
+/// Abnehmer, die *alle* Ziele auf einmal brauchen - etwa das Homescreen-
+/// Widget -, wäre das eine Abfrage pro Ziel; [GoalsDao.watchGoalProgress]
+/// liefert stattdessen alles aus einer einzigen Abfrage.
+class GoalProgress {
+  const GoalProgress({required this.goal, required this.allocatedAmount});
+
+  final SavingsGoal goal;
+
+  /// Bereits vom Konto zugeteilter Betrag.
+  final double allocatedAmount;
+
+  /// Fortschritt zwischen 0 und 1.
+  double get progress => goal.targetAmount <= 0
+      ? 0
+      : (allocatedAmount / goal.targetAmount).clamp(0.0, 1.0);
+}
+
 /// Datenzugriff für Sparziele.
 @DriftAccessor(tables: [SavingsGoals, Allocations])
 class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
@@ -36,6 +56,33 @@ class GoalsDao extends DatabaseAccessor<AppDatabase> with _$GoalsDaoMixin {
           ..where((g) => g.archived.equals(false))
           ..orderBy([(g) => OrderingTerm.desc(g.createdAt)]))
         .get();
+  }
+
+  /// Alle aktiven Sparziele samt zugeteiltem Betrag, live aktualisiert.
+  ///
+  /// Ein LEFT JOIN, damit auch Ziele ohne jede Zuteilung auftauchen; ihre
+  /// Summe ist dann NULL und wird auf 0 abgebildet.
+  Stream<List<GoalProgress>> watchGoalProgress() {
+    final total = allocations.amount.sum();
+
+    final query =
+        select(savingsGoals).join([
+            leftOuterJoin(
+              allocations,
+              allocations.goalId.equalsExp(savingsGoals.id),
+            ),
+          ])
+          ..addColumns([total])
+          ..where(savingsGoals.archived.equals(false))
+          ..groupBy([savingsGoals.id])
+          ..orderBy([OrderingTerm.desc(savingsGoals.createdAt)]);
+
+    return query.map((row) {
+      return GoalProgress(
+        goal: row.readTable(savingsGoals),
+        allocatedAmount: row.read(total) ?? 0,
+      );
+    }).watch();
   }
 
   Stream<SavingsGoal> watchGoal(int id) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../l10n/l10n_labels.dart';
 import '../models/goal_style.dart';
 import '../providers/database_provider.dart';
 import '../services/price_lookup.dart';
@@ -121,6 +122,9 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
     final url = _urlController.text.trim();
     if (url.isEmpty) return;
 
+    final t = l10n(context);
+    final formats = Formats.of(context);
+
     setState(() => _lookingUpPrice = true);
     try {
       final result = await ref.read(priceLookupProvider).lookup(url);
@@ -132,13 +136,15 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
         _nameController.text = _shorten(result.title!);
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Preis gefunden: ${formatEuro(result.price!)}')),
+        SnackBar(
+          content: Text(t.goalFormPriceFound(formats.money(result.price!))),
+        ),
       );
     } on PriceLookupException catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text(e.message)));
+      ).showSnackBar(SnackBar(content: Text(t.priceLookupMessage(e))));
     } finally {
       if (mounted) setState(() => _lookingUpPrice = false);
     }
@@ -167,10 +173,11 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
 
     return SheetScaffold(
-      title: _isEditing ? 'Sparziel bearbeiten' : 'Neues Sparziel',
+      title: _isEditing ? t.goalFormEditTitle : t.goalFormNewTitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -190,15 +197,17 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
                 Expanded(
                   child: TextFormField(
                     controller: _nameController,
-                    autofocus: !_isEditing,
+                    // Bewusst kein autofocus: Das Sheet soll sich ruhig
+                    // öffnen und die Tastatur erst kommen, wenn der Nutzer
+                    // das Feld antippt.
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'z. B. Neues Fahrrad',
+                    decoration: InputDecoration(
+                      labelText: t.goalFormName,
+                      hintText: t.goalFormNameHint,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Bitte einen Namen eingeben';
+                        return t.goalFormNameMissing;
                       }
                       return null;
                     },
@@ -212,17 +221,17 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              decoration: const InputDecoration(
-                labelText: 'Zielbetrag',
+              decoration: InputDecoration(
+                labelText: t.goalFormTargetAmount,
                 suffixText: '€',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Bitte einen Zielbetrag eingeben';
+                  return t.goalFormAmountMissing;
                 }
                 final parsed = double.tryParse(value.replaceAll(',', '.'));
                 if (parsed == null || parsed <= 0) {
-                  return 'Bitte eine gültige Zahl größer 0 eingeben';
+                  return t.goalFormAmountInvalid;
                 }
                 return null;
               },
@@ -232,11 +241,11 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
               controller: _urlController,
               keyboardType: TextInputType.url,
               decoration: InputDecoration(
-                labelText: 'Produktlink (optional)',
-                hintText: 'https://...',
+                labelText: t.goalFormProductLink,
+                hintText: t.goalFormProductLinkHint,
                 suffixIcon: _lookingUpPrice
                     ? const Padding(
-                        padding: EdgeInsets.all(12),
+                        padding: EdgeInsets.all(Spacing.sm),
                         child: SizedBox(
                           width: 20,
                           height: 20,
@@ -245,21 +254,20 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
                       )
                     : IconButton(
                         icon: const Icon(Icons.search),
-                        tooltip: 'Preis von der Seite holen',
+                        tooltip: t.goalFormLookUpPrice,
                         onPressed: _lookUpPrice,
                       ),
               ),
             ),
             const SizedBox(height: Spacing.xs),
             Text(
-              'Der Preis wird aus den Produktdaten der Seite gelesen. '
-              'Klappt nicht bei jedem Shop - dann einfach selbst eintragen.',
+              t.goalFormPriceHint,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: Spacing.lg),
-            Text('Farbe', style: theme.textTheme.titleSmall),
+            Text(t.goalFormColor, style: theme.textTheme.titleSmall),
             const SizedBox(height: Spacing.xs),
             Wrap(
               spacing: Spacing.xs,
@@ -279,7 +287,7 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: _submit,
-                child: Text(_isEditing ? 'Speichern' : 'Anlegen'),
+                child: Text(_isEditing ? t.commonSave : t.goalFormCreate),
               ),
             ),
           ],
@@ -303,13 +311,15 @@ class _IconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final palette = goalPalette(context, color.toARGB32());
+
     return Semantics(
-      label: 'Symbol auswählen, aktuell ${goalIconLabel(iconKey)}',
+      label: t.iconPickerButtonSemantics(t.goalIconLabel(iconKey)),
       button: true,
       excludeSemantics: true,
       child: Tooltip(
-        message: 'Symbol auswählen',
+        message: t.iconPickerButtonTooltip,
         child: InkWell(
           onTap: onTap,
           borderRadius: Corner.largeAll,
@@ -348,18 +358,19 @@ class _ColorChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     final palette = goalPalette(context, choice.color.toARGB32());
     final scheme = Theme.of(context).colorScheme;
+    final label = l10n(context).goalColorLabel(choice.key);
 
     // Der Name macht die Auswahl auch ohne Farbwahrnehmung bedienbar,
     // `selected` meldet den Zustand an den Screenreader.
     return Semantics(
-      label: choice.name,
+      label: label,
       selected: selected,
       button: true,
       child: InkWell(
         onTap: onTap,
         customBorder: const CircleBorder(),
         child: Tooltip(
-          message: choice.name,
+          message: label,
           // 48dp Berührungsziel, der Farbkreis darin bleibt 40dp.
           child: SizedBox(
             width: kMinTouchTarget,

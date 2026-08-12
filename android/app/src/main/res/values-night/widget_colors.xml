@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Dunkle Entsprechung zu values/widget_colors.xml. -->
+<resources>
+    <color name="widget_preview_surface">#211F26</color>
+    <color name="widget_preview_container">#4F378B</color>
+    <color name="widget_preview_on_container">#EADDFF</color>
+    <color name="widget_preview_accent">#D0BCFF</color>
+    <color name="widget_preview_on_surface">#E6E0E9</color>
+    <color name="widget_preview_on_surface_variant">#CAC4D0</color>
+    <color name="widget_preview_track">#4A4458</color>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Beschreibung des kompakten 2x2-Widgets mit Fortschrittsring.
+
+  Gleiche Konfigurations-Activity wie das breite Widget - welche Instanz
+  gerade eingestellt wird, ermittelt sie über die Widget-ID.
+-->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.spartracker.spartracker.widget.SavingsGoalWidgetConfigActivity"
+    android:description="@string/widget_ring_description"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minHeight="110dp"
+    android:minResizeHeight="100dp"
+    android:minResizeWidth="100dp"
+    android:minWidth="110dp"
+    android:maxResizeHeight="250dp"
+    android:maxResizeWidth="250dp"
+    android:previewLayout="@layout/widget_savings_goal_ring_preview"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellHeight="2"
+    android:targetCellWidth="2"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen"
+    android:widgetFeatures="reconfigurable" />

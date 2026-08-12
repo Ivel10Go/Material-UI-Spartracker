@@ -26,19 +26,11 @@ class PriceLookupException implements Exception {
   final PriceLookupError reason;
   final int? statusCode;
 
-  /// Nutzerfreundliche, ehrliche Fehlermeldung auf Deutsch.
-  String get message => switch (reason) {
-    PriceLookupError.invalidUrl =>
-      'Das sieht nicht nach einem gültigen Link aus.',
-    PriceLookupError.network =>
-      'Die Seite konnte nicht geladen werden. Internet prüfen?',
-    PriceLookupError.blocked =>
-      'Der Shop blockiert automatische Zugriffe (Fehler $statusCode). '
-          'Bitte den Preis von Hand eintragen.',
-    PriceLookupError.notFound =>
-      'Auf der Seite wurde kein Preis gefunden. '
-          'Bitte von Hand eintragen.',
-  };
+  /// Der Text für den Nutzer wird bewusst *nicht* hier gebildet: Diese
+  /// Schicht kennt keine Sprache. Die Übersetzung übernimmt die UI über
+  /// `AppLocalizations.priceLookupMessage(...)`.
+  @override
+  String toString() => 'PriceLookupException($reason, status: $statusCode)';
 }
 
 /// Liest den Produktpreis aus den strukturierten Metadaten einer Webseite.

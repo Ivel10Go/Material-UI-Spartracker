@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/database.dart';
+import '../l10n/l10n_labels.dart';
 import '../models/goal_style.dart';
 import '../theme/tokens.dart';
 import '../utils/format.dart';
@@ -23,7 +24,9 @@ class GoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
+    final formats = Formats.of(context);
     final palette = goalPalette(context, goal.colorValue);
     final progress = goal.targetAmount <= 0
         ? 0.0
@@ -36,10 +39,12 @@ class GoalCard extends StatelessWidget {
     return Semantics(
       container: true,
       button: true,
-      label:
-          '${goal.name}, ${formatEuro(allocatedAmount)} von '
-          '${formatEuro(goal.targetAmount)}, '
-          '${isDone ? 'Ziel erreicht' : '$percent Prozent'}',
+      label: t.goalCardSemantics(
+        goal.name,
+        formats.money(allocatedAmount),
+        formats.money(goal.targetAmount),
+        isDone ? t.goalCardReached : t.goalCardPercent(percent),
+      ),
       excludeSemantics: true,
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -93,8 +98,10 @@ class GoalCard extends StatelessWidget {
                           ),
                           const SizedBox(height: Spacing.xxs),
                           Text(
-                            '${formatEuro(allocatedAmount)} von '
-                            '${formatEuro(goal.targetAmount)}',
+                            t.goalCardOf(
+                              formats.money(allocatedAmount),
+                              formats.money(goal.targetAmount),
+                            ),
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),

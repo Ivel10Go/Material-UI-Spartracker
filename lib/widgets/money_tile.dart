@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../theme/tokens.dart';
 import '../utils/format.dart';
@@ -43,7 +42,7 @@ class MoneyTile extends StatelessWidget {
         ? scheme.onErrorContainer
         : scheme.onPrimaryContainer;
 
-    final dateFormat = DateFormat('dd.MM.yyyy', 'de_DE');
+    final formats = Formats.of(context);
     final hasNote = note != null && note!.isNotEmpty;
 
     return Dismissible(
@@ -84,13 +83,13 @@ class MoneyTile extends StatelessWidget {
         ),
         subtitle: Text(
           hasNote
-              ? '${dateFormat.format(date)} · $note'
-              : dateFormat.format(date),
+              ? '${formats.date(date)} · $note'
+              : formats.date(date),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Text(
-          formatEuroSigned(amount),
+          formats.signedMoney(amount),
           style: theme.textTheme.titleMedium?.copyWith(color: accent),
         ),
       ),

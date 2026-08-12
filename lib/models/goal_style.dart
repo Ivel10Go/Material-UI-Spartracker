@@ -1,6 +1,10 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
+/// Themengruppen der Symbolauswahl. Die Beschriftung kommt aus der
+/// Übersetzung, nicht aus dem Namen hier.
+enum GoalIconGroup { popular, tech, travel, vehicles, home, leisure, other }
+
 /// Ein auswählbares Symbol für ein Sparziel.
 ///
 /// Gespeichert wird der stabile [key], nicht der Codepoint: Damit bleibt
@@ -9,105 +13,103 @@ import 'package:flutter/material.dart';
 /// könnte Flutter die Icon-Fonts nicht mehr ausdünnen und der Release-Build
 /// bräche ab.
 class GoalIcon {
-  const GoalIcon(this.key, this.label, this.icon);
+  const GoalIcon(this.key, this.icon);
 
-  /// Stabiler Schlüssel, wie er in der Datenbank landet.
+  /// Stabiler Schlüssel, wie er in der Datenbank landet. Über ihn wird
+  /// auch der übersetzte Name nachgeschlagen.
   final String key;
-
-  /// Deutscher Name - dient als Tooltip und als Screenreader-Label.
-  final String label;
 
   final IconData icon;
 }
 
 /// Auswählbare Symbole, nach Themen gruppiert.
-const Map<String, List<GoalIcon>> kGoalIconGroups = {
-  'Beliebt': [
-    GoalIcon('savings', 'Sparschwein', Icons.savings),
-    GoalIcon('flag', 'Ziel', Icons.flag),
-    GoalIcon('star', 'Stern', Icons.star),
-    GoalIcon('gift', 'Geschenk', Icons.card_giftcard),
-    GoalIcon('cart', 'Einkauf', Icons.shopping_cart),
-    GoalIcon('payments', 'Geld', Icons.payments),
-    GoalIcon('trophy', 'Pokal', Icons.emoji_events),
-    GoalIcon('favorite', 'Herz', Icons.favorite),
+const Map<GoalIconGroup, List<GoalIcon>> kGoalIconGroups = {
+  GoalIconGroup.popular: [
+    GoalIcon('savings', Icons.savings),
+    GoalIcon('flag', Icons.flag),
+    GoalIcon('star', Icons.star),
+    GoalIcon('gift', Icons.card_giftcard),
+    GoalIcon('cart', Icons.shopping_cart),
+    GoalIcon('payments', Icons.payments),
+    GoalIcon('trophy', Icons.emoji_events),
+    GoalIcon('favorite', Icons.favorite),
   ],
-  'Technik': [
-    GoalIcon('smartphone', 'Smartphone', Icons.smartphone),
-    GoalIcon('laptop', 'Laptop', Icons.laptop),
-    GoalIcon('desktop', 'PC', Icons.desktop_windows),
-    GoalIcon('headphones', 'Kopfhörer', Icons.headphones),
-    GoalIcon('gaming', 'Gaming', Icons.sports_esports),
-    GoalIcon('camera', 'Kamera', Icons.photo_camera),
-    GoalIcon('watch', 'Smartwatch', Icons.watch),
-    GoalIcon('tv', 'Fernseher', Icons.tv),
-    GoalIcon('keyboard', 'Tastatur', Icons.keyboard),
-    GoalIcon('printer', 'Drucker', Icons.print),
-    GoalIcon('speaker', 'Lautsprecher', Icons.speaker),
-    GoalIcon('tablet', 'Tablet', Icons.tablet_mac),
+  GoalIconGroup.tech: [
+    GoalIcon('smartphone', Icons.smartphone),
+    GoalIcon('laptop', Icons.laptop),
+    GoalIcon('desktop', Icons.desktop_windows),
+    GoalIcon('headphones', Icons.headphones),
+    GoalIcon('gaming', Icons.sports_esports),
+    GoalIcon('camera', Icons.photo_camera),
+    GoalIcon('watch', Icons.watch),
+    GoalIcon('tv', Icons.tv),
+    GoalIcon('keyboard', Icons.keyboard),
+    GoalIcon('printer', Icons.print),
+    GoalIcon('speaker', Icons.speaker),
+    GoalIcon('tablet', Icons.tablet_mac),
   ],
-  'Reisen': [
-    GoalIcon('flight', 'Flug', Icons.flight),
-    GoalIcon('beach', 'Strand', Icons.beach_access),
-    GoalIcon('map', 'Karte', Icons.map),
-    GoalIcon('backpack', 'Rucksack', Icons.backpack),
-    GoalIcon('hotel', 'Hotel', Icons.hotel),
-    GoalIcon('luggage', 'Koffer', Icons.luggage),
-    GoalIcon('train', 'Zug', Icons.train),
-    GoalIcon('boat', 'Schiff', Icons.directions_boat),
-    GoalIcon('mountain', 'Berge', Icons.terrain),
-    GoalIcon('camping', 'Camping', Icons.cabin),
-    GoalIcon('hiking', 'Wandern', Icons.hiking),
-    GoalIcon('world', 'Welt', Icons.public),
-    GoalIcon('ticket', 'Ticket', Icons.local_activity),
+  GoalIconGroup.travel: [
+    GoalIcon('flight', Icons.flight),
+    GoalIcon('beach', Icons.beach_access),
+    GoalIcon('map', Icons.map),
+    GoalIcon('backpack', Icons.backpack),
+    GoalIcon('hotel', Icons.hotel),
+    GoalIcon('luggage', Icons.luggage),
+    GoalIcon('train', Icons.train),
+    GoalIcon('boat', Icons.directions_boat),
+    GoalIcon('mountain', Icons.terrain),
+    GoalIcon('camping', Icons.cabin),
+    GoalIcon('hiking', Icons.hiking),
+    GoalIcon('world', Icons.public),
+    GoalIcon('ticket', Icons.local_activity),
   ],
-  'Fahrzeuge': [
-    GoalIcon('car', 'Auto', Icons.directions_car),
-    GoalIcon('bike', 'Fahrrad', Icons.pedal_bike),
-    GoalIcon('scooter', 'Roller', Icons.two_wheeler),
-    GoalIcon('bus', 'Bus', Icons.directions_bus),
-    GoalIcon('e_scooter', 'E-Scooter', Icons.electric_scooter),
-    GoalIcon('truck', 'Transporter', Icons.local_shipping),
-    GoalIcon('car_repair', 'Werkstatt', Icons.car_repair),
-    GoalIcon('ev_station', 'Ladesäule', Icons.ev_station),
+  GoalIconGroup.vehicles: [
+    GoalIcon('car', Icons.directions_car),
+    GoalIcon('bike', Icons.pedal_bike),
+    GoalIcon('scooter', Icons.two_wheeler),
+    GoalIcon('bus', Icons.directions_bus),
+    GoalIcon('e_scooter', Icons.electric_scooter),
+    GoalIcon('truck', Icons.local_shipping),
+    GoalIcon('car_repair', Icons.car_repair),
+    GoalIcon('ev_station', Icons.ev_station),
   ],
-  'Wohnen': [
-    GoalIcon('home', 'Zuhause', Icons.home),
-    GoalIcon('chair', 'Möbel', Icons.chair),
-    GoalIcon('bed', 'Bett', Icons.bed),
-    GoalIcon('kitchen', 'Küche', Icons.kitchen),
-    GoalIcon('shower', 'Bad', Icons.shower),
-    GoalIcon('laundry', 'Waschmaschine', Icons.local_laundry_service),
-    GoalIcon('plant', 'Pflanzen', Icons.yard),
-    GoalIcon('lamp', 'Lampe', Icons.lightbulb),
+  GoalIconGroup.home: [
+    GoalIcon('home', Icons.home),
+    GoalIcon('chair', Icons.chair),
+    GoalIcon('bed', Icons.bed),
+    GoalIcon('kitchen', Icons.kitchen),
+    GoalIcon('shower', Icons.shower),
+    GoalIcon('laundry', Icons.local_laundry_service),
+    GoalIcon('plant', Icons.yard),
+    GoalIcon('lamp', Icons.lightbulb),
   ],
-  'Freizeit': [
-    GoalIcon('soccer', 'Fußball', Icons.sports_soccer),
-    GoalIcon('basketball', 'Basketball', Icons.sports_basketball),
-    GoalIcon('music', 'Musik', Icons.music_note),
-    GoalIcon('piano', 'Klavier', Icons.piano),
-    GoalIcon('art', 'Kunst', Icons.palette),
-    GoalIcon('book', 'Buch', Icons.menu_book),
-    GoalIcon('movie', 'Film', Icons.movie),
-    GoalIcon('mic', 'Mikrofon', Icons.mic),
-    GoalIcon('ski', 'Ski', Icons.downhill_skiing),
-    GoalIcon('surf', 'Surfen', Icons.surfing),
-    GoalIcon('skate', 'Skateboard', Icons.skateboarding),
-    GoalIcon('gym', 'Fitness', Icons.fitness_center),
+  GoalIconGroup.leisure: [
+    GoalIcon('soccer', Icons.sports_soccer),
+    GoalIcon('basketball', Icons.sports_basketball),
+    GoalIcon('music', Icons.music_note),
+    GoalIcon('piano', Icons.piano),
+    GoalIcon('art', Icons.palette),
+    GoalIcon('book', Icons.menu_book),
+    GoalIcon('movie', Icons.movie),
+    GoalIcon('mic', Icons.mic),
+    GoalIcon('ski', Icons.downhill_skiing),
+    GoalIcon('surf', Icons.surfing),
+    GoalIcon('skate', Icons.skateboarding),
+    GoalIcon('gym', Icons.fitness_center),
   ],
-  'Sonstiges': [
-    GoalIcon('school', 'Schule', Icons.school),
-    GoalIcon('pets', 'Haustier', Icons.pets),
-    GoalIcon('eco', 'Natur', Icons.eco),
-    GoalIcon('ring', 'Schmuck', Icons.diamond),
-    GoalIcon('cake', 'Feier', Icons.cake),
-    GoalIcon('food', 'Essen', Icons.restaurant),
-    GoalIcon('clothes', 'Kleidung', Icons.checkroom),
-    GoalIcon('health', 'Gesundheit', Icons.medication),
-    GoalIcon('tools', 'Werkzeug', Icons.build),
-    GoalIcon('flower', 'Blumen', Icons.local_florist),
-    GoalIcon('brush', 'Renovieren', Icons.brush),
-    GoalIcon('celebration', 'Party', Icons.celebration),
+  GoalIconGroup.other: [
+    GoalIcon('school', Icons.school),
+    GoalIcon('pets', Icons.pets),
+    GoalIcon('eco', Icons.eco),
+    GoalIcon('ring', Icons.diamond),
+    GoalIcon('cake', Icons.cake),
+    GoalIcon('food', Icons.restaurant),
+    GoalIcon('clothes', Icons.checkroom),
+    GoalIcon('health', Icons.medication),
+    GoalIcon('tools', Icons.build),
+    GoalIcon('flower', Icons.local_florist),
+    GoalIcon('brush', Icons.brush),
+    GoalIcon('celebration', Icons.celebration),
   ],
 };
 
@@ -127,18 +129,22 @@ const IconData kDefaultGoalIcon = Icons.savings;
 IconData goalIconOrDefault(String? key) =>
     _iconsByKey[key]?.icon ?? kDefaultGoalIcon;
 
-/// Liefert den Namen des Symbols - für Tooltips und Screenreader.
-String goalIconLabel(String? key) =>
-    _iconsByKey[key]?.label ?? 'Sparschwein';
-
-/// Eine auswählbare Ziel-Farbe samt Namen.
+/// Normalisiert einen gespeicherten Schlüssel auf einen bekannten Schlüssel.
 ///
-/// Der Name ist nicht Deko: Eine Auswahl, die sich *nur* über Farbe
-/// unterscheidet, ist für Screenreader-Nutzer sonst nicht bedienbar.
-class GoalColorChoice {
-  const GoalColorChoice(this.name, this.color);
+/// Nützlich überall dort, wo aus dem Schlüssel ein Dateiname o. Ä. wird -
+/// dann soll ein unbekannter Schlüssel denselben Namen ergeben wie das
+/// Symbol, das [goalIconOrDefault] dafür liefert.
+String goalIconKeyOrDefault(String? key) =>
+    _iconsByKey.containsKey(key) ? key! : kDefaultGoalIconKey;
 
-  final String name;
+/// Eine auswählbare Ziel-Farbe.
+///
+/// Der Name kommt aus der Übersetzung: Eine Auswahl, die sich *nur* über
+/// Farbe unterscheidet, ist für Screenreader-Nutzer sonst nicht bedienbar.
+class GoalColorChoice {
+  const GoalColorChoice(this.key, this.color);
+
+  final String key;
   final Color color;
 }
 
@@ -147,14 +153,14 @@ class GoalColorChoice {
 /// Diese Werte dienen nur als *Seed*: Die tatsächlich gezeichneten Farben
 /// werden daraus passend zum Hell-/Dunkelmodus abgeleitet ([goalPalette]).
 const List<GoalColorChoice> kGoalColorChoices = [
-  GoalColorChoice('Violett', Color(0xFF6750A4)),
-  GoalColorChoice('Grün', Color(0xFF2E7D32)),
-  GoalColorChoice('Blau', Color(0xFF1565C0)),
-  GoalColorChoice('Orange', Color(0xFFEF6C00)),
-  GoalColorChoice('Rot', Color(0xFFC62828)),
-  GoalColorChoice('Türkis', Color(0xFF00838F)),
-  GoalColorChoice('Magenta', Color(0xFF8E24AA)),
-  GoalColorChoice('Braun', Color(0xFF5D4037)),
+  GoalColorChoice('violet', Color(0xFF6750A4)),
+  GoalColorChoice('green', Color(0xFF2E7D32)),
+  GoalColorChoice('blue', Color(0xFF1565C0)),
+  GoalColorChoice('orange', Color(0xFFEF6C00)),
+  GoalColorChoice('red', Color(0xFFC62828)),
+  GoalColorChoice('teal', Color(0xFF00838F)),
+  GoalColorChoice('magenta', Color(0xFF8E24AA)),
+  GoalColorChoice('brown', Color(0xFF5D4037)),
 ];
 
 /// Standard-Farbe, falls für ein Sparziel keine gewählt wurde.
@@ -196,14 +202,27 @@ final Map<(int, Brightness), GoalPalette> _paletteCache = {};
 /// ab, das zum aktuellen Hell-/Dunkelmodus passt.
 GoalPalette goalPalette(BuildContext context, int? colorValue) {
   final theme = Theme.of(context);
-  final brightness = theme.brightness;
+  return goalPaletteFor(
+    colorValue: colorValue,
+    harmonizeWith: theme.colorScheme.primary,
+    brightness: theme.brightness,
+  );
+}
 
+/// Wie [goalPalette], aber ohne [BuildContext].
+///
+/// Wird gebraucht, wo beide Helligkeiten auf einmal gefragt sind - etwa
+/// beim Abgleich mit dem Homescreen-Widget, das erst zur Anzeige weiß, ob
+/// der Launcher hell oder dunkel läuft.
+GoalPalette goalPaletteFor({
+  required int? colorValue,
+  required Color harmonizeWith,
+  required Brightness brightness,
+}) {
   // harmonizeWith() zieht die gewählte Zielfarbe sanft in Richtung der
   // System-/Wallpaper-Farbe: Grün bleibt grün, passt aber zum Rest des
   // Schemas. Genau dieses Verfahren nutzt auch Android für App-Akzente.
-  final seed = goalColorFromValue(
-    colorValue,
-  ).harmonizeWith(theme.colorScheme.primary);
+  final seed = goalColorFromValue(colorValue).harmonizeWith(harmonizeWith);
 
   // Der Cache-Key enthält die bereits harmonisierte Farbe - wechselt die
   // Systemfarbe, ergibt sich automatisch ein neuer Eintrag.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../l10n/l10n_labels.dart';
 import '../theme/tokens.dart';
 import '../utils/format.dart';
 import 'sheet_scaffold.dart';
@@ -128,9 +128,10 @@ class _AllocationSheetState extends State<AllocationSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final dateFormat = DateFormat('dd.MM.yyyy', 'de_DE');
+    final formats = Formats.of(context);
 
     // Beim Bearbeiten steht der bisherige Betrag zusätzlich zur Verfügung.
     final maxAllocatable =
@@ -142,7 +143,7 @@ class _AllocationSheetState extends State<AllocationSheet> {
         widget.stillNeeded! <= maxAllocatable;
 
     return SheetScaffold(
-      title: _isEditing ? 'Zuteilung bearbeiten' : 'Geld zuteilen',
+      title: _isEditing ? t.allocationEditTitle : t.allocationNewTitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -160,14 +161,14 @@ class _AllocationSheetState extends State<AllocationSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Frei verfügbar auf dem Konto',
+                    t.allocationAvailableLabel,
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: scheme.onSecondaryContainer,
                     ),
                   ),
                   const SizedBox(height: Spacing.xxs),
                   Text(
-                    formatEuro(maxAllocatable),
+                    formats.money(maxAllocatable),
                     style: theme.textTheme.headlineSmall?.copyWith(
                       color: scheme.onSecondaryContainer,
                       fontWeight: FontWeight.w700,
@@ -179,27 +180,26 @@ class _AllocationSheetState extends State<AllocationSheet> {
             const SizedBox(height: Spacing.lg),
             TextFormField(
               controller: _amountController,
-              autofocus: !_isEditing,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
                 signed: true,
               ),
               decoration: InputDecoration(
-                labelText: 'Betrag für "${widget.goalName}"',
-                helperText: 'Negativer Betrag holt Geld zurück aufs Konto',
+                labelText: t.allocationAmountFor(widget.goalName),
+                helperText: t.allocationAmountHelper,
                 suffixText: '€',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Bitte einen Betrag eingeben';
+                  return t.entryFormAmountMissing;
                 }
                 final parsed = double.tryParse(value.replaceAll(',', '.'));
                 if (parsed == null || parsed == 0) {
-                  return 'Bitte eine gültige Zahl ungleich 0 eingeben';
+                  return t.entryFormAmountInvalid;
                 }
                 // Es kann nur verteilt werden, was auch da ist.
                 if (parsed > maxAllocatable) {
-                  return 'Nur ${formatEuro(maxAllocatable)} frei verfügbar';
+                  return t.allocationTooMuch(formats.money(maxAllocatable));
                 }
                 return null;
               },
@@ -213,14 +213,18 @@ class _AllocationSheetState extends State<AllocationSheet> {
                   ActionChip(
                     avatar: const Icon(Icons.flag, size: 18),
                     label: Text(
-                      'Rest bis Ziel (${formatEuro(widget.stillNeeded!)})',
+                      t.allocationFillRemaining(
+                        formats.money(widget.stillNeeded!),
+                      ),
                     ),
                     onPressed: () => _fill(widget.stillNeeded!),
                   ),
                 if (maxAllocatable > 0)
                   ActionChip(
                     avatar: const Icon(Icons.account_balance_wallet, size: 18),
-                    label: Text('Alles (${formatEuro(maxAllocatable)})'),
+                    label: Text(
+                      t.allocationFillAll(formats.money(maxAllocatable)),
+                    ),
                     onPressed: () => _fill(maxAllocatable),
                   ),
               ],
@@ -230,18 +234,18 @@ class _AllocationSheetState extends State<AllocationSheet> {
               onTap: _pickDate,
               borderRadius: Corner.largeAll,
               child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Datum',
-                  suffixIcon: Icon(Icons.calendar_today),
+                decoration: InputDecoration(
+                  labelText: t.commonDate,
+                  suffixIcon: const Icon(Icons.calendar_today),
                 ),
-                child: Text(dateFormat.format(_selectedDate)),
+                child: Text(formats.date(_selectedDate)),
               ),
             ),
             const SizedBox(height: Spacing.md),
             TextFormField(
               controller: _noteController,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(labelText: 'Notiz (optional)'),
+              decoration: InputDecoration(labelText: t.commonNoteOptional),
               maxLines: 2,
             ),
             const SizedBox(height: Spacing.xl),
@@ -249,7 +253,7 @@ class _AllocationSheetState extends State<AllocationSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: _submit,
-                child: Text(_isEditing ? 'Speichern' : 'Zuteilen'),
+                child: Text(_isEditing ? t.commonSave : t.allocationConfirm),
               ),
             ),
           ],

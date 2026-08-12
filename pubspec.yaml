@@ -53,8 +53,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  # Eindeutige IDs
-  uuid: ^4.5.1
+  # Einstellungen dauerhaft speichern (Sprache, Farbwahl)
+  shared_preferences: ^2.3.3
 
   # Preissuche über Produktlinks (HTML laden + Metadaten auslesen)
   http: ^1.2.2
@@ -92,6 +92,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  # Erzeugt die Übersetzungsklassen aus lib/l10n/*.arb (siehe l10n.yaml).
+  generate: true
 
   # To add assets to your application, add an assets section, like this:
   # assets:

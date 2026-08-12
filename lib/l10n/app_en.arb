@@ -1,0 +1,341 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "Spartracker",
+
+  "commonCancel": "Cancel",
+  "commonSave": "Save",
+  "commonAdd": "Add",
+  "commonDelete": "Delete",
+  "commonUndo": "Undo",
+  "commonEdit": "Edit",
+  "commonDate": "Date",
+  "commonNoteOptional": "Note (optional)",
+  "commonErrorWithMessage": "Error: {message}",
+  "@commonErrorWithMessage": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+
+  "homeGoalsSection": "Savings goals",
+  "homeNewGoalFab": "Goal",
+  "homeEmptyTitle": "No savings goals yet",
+  "homeEmptySubtitle": "Create a goal and assign money from your account to it.",
+  "homeGoalCreated": "Goal \"{name}\" created",
+  "@homeGoalCreated": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "accountTitle": "Savings account",
+  "accountBalance": "Balance",
+  "accountAllocated": "Allocated",
+  "accountAvailable": "Available",
+  "accountAvailableShort": "Free",
+  "accountOverAllocatedWarning": "Careful: more is allocated than the account holds.",
+  "accountEntriesSection": "Transactions",
+  "accountDepositFab": "Deposit",
+  "accountEmptyTitle": "No money in the account yet",
+  "accountEmptySubtitle": "Deposit money, then assign it to your savings goals.",
+  "accountEntryAdded": "Transaction added",
+  "accountEntrySaved": "Transaction saved",
+  "accountEntryDeleted": "Transaction deleted",
+  "accountSemantics": "Savings account, balance {balance}, allocated {allocated}, available {available}",
+  "@accountSemantics": {
+    "placeholders": {
+      "balance": { "type": "String" },
+      "allocated": { "type": "String" },
+      "available": { "type": "String" }
+    }
+  },
+
+  "resetMoneyMenu": "Reset money",
+  "resetMoneyTitle": "Reset money?",
+  "resetMoneyBody": "All transactions and allocations will be deleted.\n\nBalance: {balance} → {zero}\nAllocated: {allocated} → {zero}\n\nYour savings goals are kept but will be back at 0 %. This cannot be undone.",
+  "@resetMoneyBody": {
+    "placeholders": {
+      "balance": { "type": "String" },
+      "allocated": { "type": "String" },
+      "zero": { "type": "String" }
+    }
+  },
+  "resetMoneyConfirm": "Reset",
+  "resetMoneyDone": "Money has been reset to zero",
+
+  "goalFormNewTitle": "New savings goal",
+  "goalFormEditTitle": "Edit savings goal",
+  "goalFormName": "Name",
+  "goalFormNameHint": "e.g. New bike",
+  "goalFormNameMissing": "Please enter a name",
+  "goalFormTargetAmount": "Target amount",
+  "goalFormAmountMissing": "Please enter a target amount",
+  "goalFormAmountInvalid": "Please enter a number greater than 0",
+  "goalFormProductLink": "Product link (optional)",
+  "goalFormProductLinkHint": "https://...",
+  "goalFormLookUpPrice": "Fetch price from the page",
+  "goalFormPriceHint": "The price is read from the page's product data. This does not work with every shop — you can always enter it yourself.",
+  "goalFormColor": "Colour",
+  "goalFormCreate": "Create",
+  "goalFormPriceFound": "Price found: {price}",
+  "@goalFormPriceFound": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+
+  "iconPickerTitle": "Choose a symbol",
+  "iconPickerButtonTooltip": "Choose a symbol",
+  "iconPickerButtonSemantics": "Choose a symbol, currently {label}",
+  "@iconPickerButtonSemantics": {
+    "placeholders": { "label": { "type": "String" } }
+  },
+
+  "entryFormNewTitle": "Deposit money",
+  "entryFormEditTitle": "Edit transaction",
+  "entryFormAmount": "Amount",
+  "entryFormAmountHelper": "A negative amount is a withdrawal",
+  "entryFormAmountMissing": "Please enter an amount",
+  "entryFormAmountInvalid": "Please enter a valid number other than 0",
+  "entryFormSource": "Source",
+  "entryFormSourceHint": "e.g. birthday, eBay, paper round ...",
+  "entryFormSourceMissing": "Please enter a source",
+  "entryFormFooter": "The money goes into your savings account and can then be assigned to individual goals.",
+
+  "allocationNewTitle": "Assign money",
+  "allocationEditTitle": "Edit allocation",
+  "allocationAvailableLabel": "Available in the account",
+  "allocationAmountFor": "Amount for \"{name}\"",
+  "@allocationAmountFor": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "allocationAmountHelper": "A negative amount returns money to the account",
+  "allocationTooMuch": "Only {amount} available",
+  "@allocationTooMuch": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "allocationFillRemaining": "Remaining ({amount})",
+  "@allocationFillRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "allocationFillAll": "All ({amount})",
+  "@allocationFillAll": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "allocationConfirm": "Assign",
+  "allocationDone": "{amount} assigned",
+  "@allocationDone": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+
+  "detailAllocationsSection": "Allocations",
+  "detailAllocation": "Allocation",
+  "detailReturnedToAccount": "Back to the account",
+  "detailEmptyTitle": "Nothing assigned yet",
+  "detailEmptySubtitle": "Assign money from your savings account to this goal.",
+  "detailAllocationDeleted": "Allocation deleted",
+  "detailAssignFab": "Assign",
+  "detailOfAmount": "of {amount}",
+  "@detailOfAmount": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "detailGoalReached": "Goal reached 🎉",
+  "detailRemaining": "{amount} to go",
+  "@detailRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "detailProgressSemantics": "Progress {percent} percent",
+  "@detailProgressSemantics": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "detailOpenProductPage": "Open product page",
+  "detailRefreshPrice": "Refresh price",
+  "detailSearchingPrice": "Searching for the price ...",
+  "detailPriceUpdated": "Target amount updated: {price}",
+  "@detailPriceUpdated": {
+    "placeholders": { "price": { "type": "String" } }
+  },
+  "detailLinkFailed": "The link could not be opened",
+
+  "archiveMenu": "Archive",
+  "archiveTitle": "Archive savings goal?",
+  "archiveBody": "\"{name}\" will be hidden. The allocated money stays reserved — delete the allocations first if you want it available again.",
+  "@archiveBody": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+
+  "deleteGoalTitle": "Delete savings goal?",
+  "deleteGoalBodyWithMoney": "\"{name}\" will be deleted together with all its allocations.\n\n{amount} goes back to the account and will be available again.",
+  "@deleteGoalBodyWithMoney": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+  "deleteGoalBodyEmpty": "\"{name}\" will be deleted. No money is allocated, so the balance stays the same.",
+  "@deleteGoalBodyEmpty": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "goalDeleted": "\"{name}\" deleted",
+  "@goalDeleted": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "goalDeletedWithMoney": "\"{name}\" deleted · {amount} back in the account",
+  "@goalDeletedWithMoney": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "amount": { "type": "String" }
+    }
+  },
+
+  "goalCardSemantics": "{name}, {allocated} of {target}, {progress}",
+  "@goalCardSemantics": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "allocated": { "type": "String" },
+      "target": { "type": "String" },
+      "progress": { "type": "String" }
+    }
+  },
+  "goalCardReached": "goal reached",
+  "goalCardPercent": "{percent} percent",
+  "@goalCardPercent": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "goalCardOf": "{allocated} of {target}",
+  "@goalCardOf": {
+    "placeholders": {
+      "allocated": { "type": "String" },
+      "target": { "type": "String" }
+    }
+  },
+
+  "widgetTargetOf": "of {target}",
+  "@widgetTargetOf": {
+    "placeholders": { "target": { "type": "String" } }
+  },
+  "widgetRemaining": "{amount} to go",
+  "@widgetRemaining": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "widgetReached": "Goal reached",
+  "widgetHintPickGoal": "Tap to choose a savings goal",
+  "widgetHintNoData": "Open Spartracker to get started",
+  "widgetConfigTitle": "Choose savings goal",
+  "widgetConfigConfirm": "Apply",
+  "widgetConfigEmptyTitle": "No savings goals yet",
+  "widgetConfigEmptyBody": "Create a savings goal in the app first, then it will show up here.",
+  "widgetConfigOpenApp": "Open app",
+
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsDynamicColor": "Use system colours",
+  "settingsDynamicColorOn": "Colours follow your wallpaper or system accent",
+  "settingsDynamicColorOff": "Pick your own colour below",
+  "settingsDynamicColorUnavailable": "This device does not provide system colours",
+  "settingsOwnColor": "Your colour",
+  "settingsLanguage": "Language",
+  "settingsLanguageSystem": "System",
+  "settingsLanguageGerman": "Deutsch",
+  "settingsLanguageEnglish": "English",
+  "settingsOpen": "Settings",
+
+  "sourceBirthday": "Birthday",
+  "sourceEbay": "eBay",
+  "sourcePocketMoney": "Pocket money",
+  "sourceOther": "Other",
+
+  "priceErrorInvalidUrl": "That does not look like a valid link.",
+  "priceErrorNetwork": "The page could not be loaded. Check your connection?",
+  "priceErrorBlocked": "The shop blocks automated access (error {status}). Please enter the price yourself.",
+  "@priceErrorBlocked": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "priceErrorNotFound": "No price was found on that page. Please enter it yourself.",
+
+  "colorViolet": "Violet",
+  "colorGreen": "Green",
+  "colorBlue": "Blue",
+  "colorOrange": "Orange",
+  "colorRed": "Red",
+  "colorTeal": "Teal",
+  "colorMagenta": "Magenta",
+  "colorBrown": "Brown",
+
+  "iconGroupPopular": "Popular",
+  "iconGroupTech": "Tech",
+  "iconGroupTravel": "Travel",
+  "iconGroupVehicles": "Vehicles",
+  "iconGroupHome": "Home",
+  "iconGroupLeisure": "Leisure",
+  "iconGroupOther": "Other",
+
+  "iconSavings": "Piggy bank",
+  "iconFlag": "Goal",
+  "iconStar": "Star",
+  "iconGift": "Gift",
+  "iconCart": "Shopping",
+  "iconPayments": "Money",
+  "iconTrophy": "Trophy",
+  "iconFavorite": "Heart",
+  "iconSmartphone": "Smartphone",
+  "iconLaptop": "Laptop",
+  "iconDesktop": "PC",
+  "iconHeadphones": "Headphones",
+  "iconGaming": "Gaming",
+  "iconCamera": "Camera",
+  "iconWatch": "Smartwatch",
+  "iconTv": "TV",
+  "iconKeyboard": "Keyboard",
+  "iconPrinter": "Printer",
+  "iconSpeaker": "Speaker",
+  "iconTablet": "Tablet",
+  "iconFlight": "Flight",
+  "iconBeach": "Beach",
+  "iconMap": "Map",
+  "iconBackpack": "Backpack",
+  "iconHotel": "Hotel",
+  "iconLuggage": "Luggage",
+  "iconTrain": "Train",
+  "iconBoat": "Boat",
+  "iconMountain": "Mountains",
+  "iconCamping": "Camping",
+  "iconHiking": "Hiking",
+  "iconWorld": "World",
+  "iconTicket": "Ticket",
+  "iconCar": "Car",
+  "iconBike": "Bicycle",
+  "iconScooter": "Scooter",
+  "iconBus": "Bus",
+  "iconEScooter": "E-scooter",
+  "iconTruck": "Van",
+  "iconCarRepair": "Garage",
+  "iconEvStation": "Charging station",
+  "iconHome": "Home",
+  "iconChair": "Furniture",
+  "iconBed": "Bed",
+  "iconKitchen": "Kitchen",
+  "iconShower": "Bathroom",
+  "iconLaundry": "Washing machine",
+  "iconPlant": "Plants",
+  "iconLamp": "Lamp",
+  "iconSoccer": "Football",
+  "iconBasketball": "Basketball",
+  "iconMusic": "Music",
+  "iconPiano": "Piano",
+  "iconArt": "Art",
+  "iconBook": "Book",
+  "iconMovie": "Film",
+  "iconMic": "Microphone",
+  "iconSki": "Skiing",
+  "iconSurf": "Surfing",
+  "iconSkate": "Skateboard",
+  "iconGym": "Fitness",
+  "iconSchool": "School",
+  "iconPets": "Pet",
+  "iconEco": "Nature",
+  "iconRing": "Jewellery",
+  "iconCake": "Celebration",
+  "iconFood": "Food",
+  "iconClothes": "Clothing",
+  "iconHealth": "Health",
+  "iconTools": "Tools",
+  "iconFlower": "Flowers",
+  "iconBrush": "Renovation",
+  "iconCelebration": "Party"
+}

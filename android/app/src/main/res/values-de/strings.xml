@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Deutsche Fassung von values/strings.xml. -->
+<resources>
+    <string name="widget_label">Sparziel</string>
+    <string name="widget_description">Zeigt, wie weit eines deiner Sparziele ist.</string>
+    <string name="widget_ring_label">Sparziel (kompakt)</string>
+    <string name="widget_ring_description">Zeigt ein Sparziel als Fortschrittsring.</string>
+
+    <string name="widget_hint_pick_goal">Tippen, um ein Sparziel zu wählen</string>
+    <string name="widget_hint_no_data">Spartracker öffnen, um loszulegen</string>
+
+    <string name="widget_config_title">Sparziel wählen</string>
+    <string name="widget_config_confirm">Übernehmen</string>
+    <string name="widget_config_cancel">Abbrechen</string>
+    <string name="widget_config_empty_title">Noch keine Sparziele</string>
+    <string name="widget_config_empty_body">Lege zuerst in der App ein Sparziel an, dann taucht es hier auf.</string>
+    <string name="widget_config_open_app">App öffnen</string>
+
+    <!-- Beispielwerte für die Vorschau im Widget-Auswahlmenü. -->
+    <string name="widget_preview_name">Neues Fahrrad</string>
+    <string name="widget_preview_percent">40 %</string>
+    <string name="widget_preview_saved">320,00 €</string>
+    <string name="widget_preview_target">von 800,00 €</string>
+    <string name="widget_preview_remaining">noch 480,00 €</string>
+</resources>

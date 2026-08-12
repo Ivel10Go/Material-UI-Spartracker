@@ -15,4 +15,10 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <!-- Fenster-Theme der Widget-Einstellungen. Die eigentliche Gestaltung
+         übernimmt Compose Material 3; hier wird nur der Untergrund gesetzt,
+         damit beim Öffnen nichts aufblitzt. -->
+    <style name="WidgetConfigTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">?android:colorBackground</item>
+    </style>
 </resources>

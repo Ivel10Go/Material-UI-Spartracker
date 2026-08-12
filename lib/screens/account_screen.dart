@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/database.dart';
+import '../l10n/l10n_labels.dart';
 import '../providers/account_provider.dart';
 import '../providers/database_provider.dart';
 import '../theme/tokens.dart';
@@ -16,6 +17,7 @@ class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
 
   Future<void> _addEntry(BuildContext context, WidgetRef ref) async {
+    final t = l10n(context);
     final result = await EntryFormSheet.show(context);
     if (result == null) return;
 
@@ -33,7 +35,7 @@ class AccountScreen extends ConsumerWidget {
     if (context.mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Buchung hinzugefügt')));
+      ).showSnackBar(SnackBar(content: Text(t.accountEntryAdded)));
     }
   }
 
@@ -42,6 +44,7 @@ class AccountScreen extends ConsumerWidget {
     WidgetRef ref,
     AccountEntry entry,
   ) async {
+    final t = l10n(context);
     final result = await EntryFormSheet.show(
       context,
       initialAmount: entry.amount,
@@ -66,7 +69,7 @@ class AccountScreen extends ConsumerWidget {
     if (context.mounted) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Buchung gespeichert')));
+      ).showSnackBar(SnackBar(content: Text(t.accountEntrySaved)));
     }
   }
 
@@ -75,14 +78,15 @@ class AccountScreen extends ConsumerWidget {
     WidgetRef ref,
     AccountEntry entry,
   ) async {
+    final t = l10n(context);
     await ref.read(accountDaoProvider).deleteEntry(entry.id);
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Buchung gelöscht'),
+        content: Text(t.accountEntryDeleted),
         action: SnackBarAction(
-          label: 'Rückgängig',
+          label: t.commonUndo,
           onPressed: () {
             // Legt die Buchung mit denselben Werten wieder an.
             ref
@@ -101,9 +105,11 @@ class AccountScreen extends ConsumerWidget {
     );
   }
 
-  /// Setzt alles Geld auf 0 zurück: Buchungen und Zuteilungen werden
+  /// Setzt alles Geld auf null zurück: Buchungen und Zuteilungen werden
   /// gelöscht, die Sparziele selbst bleiben bestehen.
   Future<void> _resetMoney(BuildContext context, WidgetRef ref) async {
+    final t = l10n(context);
+    final formats = Formats.of(context);
     final balance = ref.read(accountBalanceProvider).valueOrNull ?? 0;
     final allocated = ref.read(allocatedTotalProvider).valueOrNull ?? 0;
 
@@ -111,18 +117,18 @@ class AccountScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         icon: const Icon(Icons.restart_alt),
-        title: const Text('Geld zurücksetzen?'),
+        title: Text(t.resetMoneyTitle),
         content: Text(
-          'Alle Buchungen und Zuteilungen werden gelöscht.\n\n'
-          'Kontostand: ${formatEuro(balance)} → 0,00 €\n'
-          'Zugeteilt: ${formatEuro(allocated)} → 0,00 €\n\n'
-          'Deine Sparziele bleiben erhalten, stehen danach aber wieder '
-          'bei 0 %. Das lässt sich nicht rückgängig machen.',
+          t.resetMoneyBody(
+            formats.money(balance),
+            formats.money(0),
+            formats.money(allocated),
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Abbrechen'),
+            child: Text(t.commonCancel),
           ),
           FilledButton(
             style: FilledButton.styleFrom(
@@ -130,7 +136,7 @@ class AccountScreen extends ConsumerWidget {
               foregroundColor: Theme.of(context).colorScheme.onError,
             ),
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Zurücksetzen'),
+            child: Text(t.resetMoneyConfirm),
           ),
         ],
       ),
@@ -140,14 +146,15 @@ class AccountScreen extends ConsumerWidget {
     await ref.read(accountDaoProvider).resetAllMoney();
 
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Geld wurde auf 0 € zurückgesetzt')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.resetMoneyDone)));
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = l10n(context);
     final entriesAsync = ref.watch(accountEntriesProvider);
     final margin = adaptivePageMargin(context);
 
@@ -156,7 +163,7 @@ class AccountScreen extends ConsumerWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
-            title: const Text('Sparkonto'),
+            title: Text(t.accountTitle),
             actions: [
               PopupMenuButton<String>(
                 onSelected: (value) {
@@ -171,7 +178,7 @@ class AccountScreen extends ConsumerWidget {
                         color: Theme.of(context).colorScheme.error,
                       ),
                       title: Text(
-                        'Geld zurücksetzen',
+                        t.resetMoneyMenu,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.error,
                         ),
@@ -198,7 +205,7 @@ class AccountScreen extends ConsumerWidget {
                   Spacing.xs,
                 ),
                 child: Text(
-                  'Buchungen',
+                  t.accountEntriesSection,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
@@ -208,7 +215,7 @@ class AccountScreen extends ConsumerWidget {
             loading: () => const [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(32),
+                  padding: EdgeInsets.all(Spacing.xl),
                   child: Center(child: CircularProgressIndicator()),
                 ),
               ),
@@ -216,24 +223,26 @@ class AccountScreen extends ConsumerWidget {
             error: (error, stack) => [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.all(32),
-                  child: Center(child: Text('Fehler: $error')),
+                  padding: const EdgeInsets.all(Spacing.xl),
+                  child: Center(child: Text(t.commonErrorWithMessage('$error'))),
                 ),
               ),
             ],
             data: (entries) {
               if (entries.isEmpty) {
-                return const [
+                return [
                   // Unten Platz lassen, damit der FAB den Text nicht
                   // überdeckt.
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(top: 8, bottom: 120),
+                      padding: const EdgeInsets.only(
+                        top: Spacing.xs,
+                        bottom: 120,
+                      ),
                       child: EmptyState(
                         icon: Icons.account_balance_wallet_outlined,
-                        title: 'Noch kein Geld auf dem Konto',
-                        subtitle:
-                            'Zahle Geld ein - danach kannst du es deinen Sparzielen zuteilen.',
+                        title: t.accountEmptyTitle,
+                        subtitle: t.accountEmptySubtitle,
                       ),
                     ),
                   ),
@@ -268,7 +277,7 @@ class AccountScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addEntry(context, ref),
         icon: const Icon(Icons.add),
-        label: const Text('Einzahlen'),
+        label: Text(t.accountDepositFab),
       ),
     );
   }
@@ -280,65 +289,64 @@ class _BalanceHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final t = l10n(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final formats = Formats.of(context);
 
     final balance = ref.watch(accountBalanceProvider).valueOrNull ?? 0;
     final allocated = ref.watch(allocatedTotalProvider).valueOrNull ?? 0;
     final available = ref.watch(availableAmountProvider);
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Card(
-        color: scheme.primaryContainer,
-        child: Padding(
-          padding: const EdgeInsets.all(Spacing.lg),
-          child: Column(
-            children: [
-              Text(
-                'Kontostand',
-                style: theme.textTheme.labelLarge?.copyWith(
+    return Card(
+      color: scheme.primaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(Spacing.lg),
+        child: Column(
+          children: [
+            Text(
+              t.accountBalance,
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: scheme.onPrimaryContainer,
+              ),
+            ),
+            const SizedBox(height: Spacing.xxs),
+            Text(
+              formats.money(balance),
+              style: theme.textTheme.displaySmall?.copyWith(
+                color: scheme.onPrimaryContainer,
+                fontWeight: FontWeight.w700,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: Spacing.md),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _Chip(
+                  label: t.accountAllocated,
+                  value: allocated,
                   color: scheme.onPrimaryContainer,
                 ),
-              ),
-              const SizedBox(height: Spacing.xxs),
-              Text(
-                formatEuro(balance),
-                style: theme.textTheme.displaySmall?.copyWith(
-                  color: scheme.onPrimaryContainer,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: Spacing.md),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _Chip(
-                    label: 'Zugeteilt',
-                    value: allocated,
-                    color: scheme.onPrimaryContainer,
-                  ),
-                  _Chip(
-                    label: 'Frei',
-                    value: available,
-                    color: available < 0
-                        ? scheme.error
-                        : scheme.onPrimaryContainer,
-                  ),
-                ],
-              ),
-              if (available < 0) ...[
-                const SizedBox(height: Spacing.sm),
-                Text(
-                  'Achtung: Es ist mehr zugeteilt als auf dem Konto liegt.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: scheme.error,
-                  ),
-                  textAlign: TextAlign.center,
+                _Chip(
+                  label: t.accountAvailableShort,
+                  value: available,
+                  color: available < 0
+                      ? scheme.error
+                      : scheme.onPrimaryContainer,
                 ),
               ],
+            ),
+            if (available < 0) ...[
+              const SizedBox(height: Spacing.sm),
+              Text(
+                t.accountOverAllocatedWarning,
+                style: theme.textTheme.bodySmall?.copyWith(color: scheme.error),
+                textAlign: TextAlign.center,
+              ),
             ],
-          ),
+          ],
         ),
       ),
     );
@@ -346,7 +354,11 @@ class _BalanceHeader extends ConsumerWidget {
 }
 
 class _Chip extends StatelessWidget {
-  const _Chip({required this.label, required this.value, required this.color});
+  const _Chip({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   final String label;
   final double value;
@@ -360,7 +372,7 @@ class _Chip extends StatelessWidget {
         Text(label, style: theme.textTheme.labelMedium?.copyWith(color: color)),
         const SizedBox(height: Spacing.xxs),
         Text(
-          formatEuro(value),
+          Formats.of(context).money(value),
           style: theme.textTheme.titleMedium?.copyWith(
             color: color,
             fontWeight: FontWeight.w700,

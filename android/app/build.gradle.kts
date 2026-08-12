@@ -1,7 +1,12 @@
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    // Es bringt zugleich das Kotlin-Plugin mit ("Built-in Kotlin"), weshalb
+    // der Compose-Compiler danach kommt.
     id("dev.flutter.flutter-gradle-plugin")
+    // Compose-Compiler für das Homescreen-Widget (Glance) und dessen
+    // Einstellungen. Seit Kotlin 2.0 folgt die Version dem Kotlin-Release.
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -32,6 +37,26 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    buildFeatures {
+        compose = true
+    }
+}
+
+dependencies {
+    // Compose-Versionen kommen gebündelt aus der BOM - so passen Runtime,
+    // UI und Material 3 garantiert zusammen.
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
+
+    // Glance zeichnet das Homescreen-Widget. GlanceTheme liefert dabei ab
+    // Android 12 die Wallpaper-Farben, also denselben Material-You-Look,
+    // den die App über dynamic_color bekommt.
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
+
+    // Widget-Einstellungen als Compose-Material-3-Bildschirm.
+    implementation("androidx.activity:activity-compose:1.9.2")
+    implementation("androidx.compose.material3:material3")
 }
 
 kotlin {

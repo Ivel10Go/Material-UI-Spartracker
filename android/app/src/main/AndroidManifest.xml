@@ -27,6 +27,45 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Homescreen-Widget mit dem Stand eines Sparziels. -->
+        <receiver
+            android:name=".widget.SavingsGoalWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/savings_goal_widget_info" />
+        </receiver>
+
+        <!-- Kompaktes 2x2-Widget mit Fortschrittsring. -->
+        <receiver
+            android:name=".widget.SavingsGoalRingWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_ring_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/savings_goal_ring_widget_info" />
+        </receiver>
+
+        <!-- Widget-Einstellungen: Auswahl des Sparziels. Von beiden Widgets
+             genutzt. Wird vom Launcher
+             beim Ablegen und später über das Widget-Kontextmenü gestartet. -->
+        <activity
+            android:name=".widget.SavingsGoalWidgetConfigActivity"
+            android:exported="true"
+            android:label="@string/widget_config_title"
+            android:theme="@style/WidgetConfigTheme">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

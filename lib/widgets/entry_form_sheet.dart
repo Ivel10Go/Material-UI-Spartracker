@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import '../models/entry_source.dart';
+import '../l10n/l10n_labels.dart';
 import '../theme/tokens.dart';
+import '../utils/format.dart';
 import 'sheet_scaffold.dart';
 
 /// Ergebnis des Konto-Eintrags-Formulars.
@@ -118,11 +118,12 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
-    final dateFormat = DateFormat('dd.MM.yyyy', 'de_DE');
+    final formats = Formats.of(context);
 
     return SheetScaffold(
-      title: _isEditing ? 'Buchung bearbeiten' : 'Geld einzahlen',
+      title: _isEditing ? t.entryFormEditTitle : t.entryFormNewTitle,
       child: Form(
         key: _formKey,
         child: Column(
@@ -131,23 +132,22 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
           children: [
             TextFormField(
               controller: _amountController,
-              autofocus: !_isEditing,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
                 signed: true,
               ),
-              decoration: const InputDecoration(
-                labelText: 'Betrag',
-                helperText: 'Negativer Betrag = Entnahme vom Konto',
+              decoration: InputDecoration(
+                labelText: t.entryFormAmount,
+                helperText: t.entryFormAmountHelper,
                 suffixText: '€',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Bitte einen Betrag eingeben';
+                  return t.entryFormAmountMissing;
                 }
                 final parsed = double.tryParse(value.replaceAll(',', '.'));
                 if (parsed == null || parsed == 0) {
-                  return 'Bitte eine gültige Zahl ungleich 0 eingeben';
+                  return t.entryFormAmountInvalid;
                 }
                 return null;
               },
@@ -157,13 +157,13 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
             TextFormField(
               controller: _sourceController,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Quelle',
-                hintText: 'z. B. Geburtstag, eBay, Zeitung austragen ...',
+              decoration: InputDecoration(
+                labelText: t.entryFormSource,
+                hintText: t.entryFormSourceHint,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Bitte eine Quelle eingeben';
+                  return t.entryFormSourceMissing;
                 }
                 return null;
               },
@@ -175,7 +175,7 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               spacing: Spacing.xs,
               runSpacing: Spacing.xs,
               children: [
-                for (final suggestion in kEntrySourceSuggestions)
+                for (final suggestion in t.entrySourceSuggestions)
                   ActionChip(
                     label: Text(suggestion),
                     onPressed: () {
@@ -189,18 +189,18 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               onTap: _pickDate,
               borderRadius: Corner.largeAll,
               child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Datum',
-                  suffixIcon: Icon(Icons.calendar_today),
+                decoration: InputDecoration(
+                  labelText: t.commonDate,
+                  suffixIcon: const Icon(Icons.calendar_today),
                 ),
-                child: Text(dateFormat.format(_selectedDate)),
+                child: Text(formats.date(_selectedDate)),
               ),
             ),
             const SizedBox(height: Spacing.md),
             TextFormField(
               controller: _noteController,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(labelText: 'Notiz (optional)'),
+              decoration: InputDecoration(labelText: t.commonNoteOptional),
               maxLines: 2,
             ),
             const SizedBox(height: Spacing.xl),
@@ -208,13 +208,12 @@ class _EntryFormSheetState extends State<EntryFormSheet> {
               width: double.infinity,
               child: FilledButton(
                 onPressed: _submit,
-                child: Text(_isEditing ? 'Speichern' : 'Hinzufügen'),
+                child: Text(_isEditing ? t.commonSave : t.commonAdd),
               ),
             ),
             const SizedBox(height: Spacing.xxs),
             Text(
-              'Das Geld landet auf dem Sparkonto und kann danach '
-              'einzelnen Sparzielen zugeteilt werden.',
+              t.entryFormFooter,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

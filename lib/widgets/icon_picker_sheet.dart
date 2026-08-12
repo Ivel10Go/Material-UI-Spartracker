@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/l10n_labels.dart';
 import '../models/goal_style.dart';
 import '../theme/tokens.dart';
 import 'sheet_scaffold.dart';
@@ -37,17 +38,21 @@ class IconPickerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = l10n(context);
     final theme = Theme.of(context);
     final palette = goalPalette(context, color.toARGB32());
 
     return SheetScaffold(
-      title: 'Symbol auswählen',
+      title: t.iconPickerTitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           for (final group in kGoalIconGroups.entries) ...[
-            Text(group.key, style: theme.textTheme.titleSmall),
+            Text(
+              t.goalIconGroupLabel(group.key),
+              style: theme.textTheme.titleSmall,
+            ),
             const SizedBox(height: Spacing.sm),
             Wrap(
               spacing: Spacing.sm,
@@ -86,14 +91,15 @@ class _IconChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final label = l10n(context).goalIconLabel(choice.key);
 
     return Semantics(
-      label: choice.label,
+      label: label,
       selected: selected,
       button: true,
       excludeSemantics: true,
       child: Tooltip(
-        message: choice.label,
+        message: label,
         child: InkWell(
           onTap: onTap,
           customBorder: const CircleBorder(),

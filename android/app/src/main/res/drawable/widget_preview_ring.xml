@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Fortschrittsring für die Vorschau im Auswahlmenü: Spur plus Indikator bei
+  rund 40 %, runde Enden mit Lücke - dieselbe Form, die das Widget später
+  zur Laufzeit zeichnet.
+
+  Der Indikator läuft von zwölf Uhr über 144 Grad im Uhrzeigersinn; die
+  Spur setzt nach einer kleinen Lücke an und schließt den Kreis.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Spur: von 62 Grad über 200 Grad bis -98 Grad. -->
+    <path
+        android:pathData="M68.7,86.9 A44,44 0 1 1 41.9,4.4"
+        android:strokeColor="@color/widget_preview_track"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+    <!-- Indikator: von zwölf Uhr über 144 Grad. -->
+    <path
+        android:pathData="M48,4 A44,44 0 0 1 73.9,83.6"
+        android:strokeColor="@color/widget_preview_accent"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+</vector>
