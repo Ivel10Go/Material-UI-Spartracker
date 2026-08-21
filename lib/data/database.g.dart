@@ -106,6 +106,17 @@ class $SavingsGoalsTable extends SavingsGoals
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _purchasedAtMeta = const VerificationMeta(
+    'purchasedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> purchasedAt = GeneratedColumn<DateTime>(
+    'purchased_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -116,6 +127,7 @@ class $SavingsGoalsTable extends SavingsGoals
     colorValue,
     productUrl,
     archived,
+    purchasedAt,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -181,6 +193,15 @@ class $SavingsGoalsTable extends SavingsGoals
         archived.isAcceptableOrUnknown(data['archived']!, _archivedMeta),
       );
     }
+    if (data.containsKey('purchased_at')) {
+      context.handle(
+        _purchasedAtMeta,
+        purchasedAt.isAcceptableOrUnknown(
+          data['purchased_at']!,
+          _purchasedAtMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -222,6 +243,10 @@ class $SavingsGoalsTable extends SavingsGoals
         DriftSqlType.bool,
         data['${effectivePrefix}archived'],
       )!,
+      purchasedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}purchased_at'],
+      ),
     );
   }
 
@@ -250,6 +275,15 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
   /// Optionaler Produktlink, aus dem der Preis ermittelt werden kann.
   final String? productUrl;
   final bool archived;
+
+  /// Datum, an dem das Produkt schon gekauft wurde - unabhängig vom
+  /// bisherigen Sparfortschritt.
+  ///
+  /// Ist dieses Feld gesetzt, wurde das Ziel bereits aus eigener Tasche
+  /// bezahlt. Spätere Zuteilungen (z. B. aus einem eBay-Verkauf oder einem
+  /// Geldgeschenk) gleichen den vorgestreckten Betrag dann nachträglich
+  /// aus, statt auf den Kauf hinzusparen.
+  final DateTime? purchasedAt;
   const SavingsGoal({
     required this.id,
     required this.name,
@@ -259,6 +293,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
     this.colorValue,
     this.productUrl,
     required this.archived,
+    this.purchasedAt,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -277,6 +312,9 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       map['product_url'] = Variable<String>(productUrl);
     }
     map['archived'] = Variable<bool>(archived);
+    if (!nullToAbsent || purchasedAt != null) {
+      map['purchased_at'] = Variable<DateTime>(purchasedAt);
+    }
     return map;
   }
 
@@ -296,6 +334,9 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ? const Value.absent()
           : Value(productUrl),
       archived: Value(archived),
+      purchasedAt: purchasedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(purchasedAt),
     );
   }
 
@@ -313,6 +354,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       colorValue: serializer.fromJson<int?>(json['colorValue']),
       productUrl: serializer.fromJson<String?>(json['productUrl']),
       archived: serializer.fromJson<bool>(json['archived']),
+      purchasedAt: serializer.fromJson<DateTime?>(json['purchasedAt']),
     );
   }
   @override
@@ -327,6 +369,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
       'colorValue': serializer.toJson<int?>(colorValue),
       'productUrl': serializer.toJson<String?>(productUrl),
       'archived': serializer.toJson<bool>(archived),
+      'purchasedAt': serializer.toJson<DateTime?>(purchasedAt),
     };
   }
 
@@ -339,6 +382,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
     Value<int?> colorValue = const Value.absent(),
     Value<String?> productUrl = const Value.absent(),
     bool? archived,
+    Value<DateTime?> purchasedAt = const Value.absent(),
   }) => SavingsGoal(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -348,6 +392,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
     colorValue: colorValue.present ? colorValue.value : this.colorValue,
     productUrl: productUrl.present ? productUrl.value : this.productUrl,
     archived: archived ?? this.archived,
+    purchasedAt: purchasedAt.present ? purchasedAt.value : this.purchasedAt,
   );
   SavingsGoal copyWithCompanion(SavingsGoalsCompanion data) {
     return SavingsGoal(
@@ -365,6 +410,9 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ? data.productUrl.value
           : this.productUrl,
       archived: data.archived.present ? data.archived.value : this.archived,
+      purchasedAt: data.purchasedAt.present
+          ? data.purchasedAt.value
+          : this.purchasedAt,
     );
   }
 
@@ -378,7 +426,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           ..write('iconKey: $iconKey, ')
           ..write('colorValue: $colorValue, ')
           ..write('productUrl: $productUrl, ')
-          ..write('archived: $archived')
+          ..write('archived: $archived, ')
+          ..write('purchasedAt: $purchasedAt')
           ..write(')'))
         .toString();
   }
@@ -393,6 +442,7 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
     colorValue,
     productUrl,
     archived,
+    purchasedAt,
   );
   @override
   bool operator ==(Object other) =>
@@ -405,7 +455,8 @@ class SavingsGoal extends DataClass implements Insertable<SavingsGoal> {
           other.iconKey == this.iconKey &&
           other.colorValue == this.colorValue &&
           other.productUrl == this.productUrl &&
-          other.archived == this.archived);
+          other.archived == this.archived &&
+          other.purchasedAt == this.purchasedAt);
 }
 
 class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
@@ -417,6 +468,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
   final Value<int?> colorValue;
   final Value<String?> productUrl;
   final Value<bool> archived;
+  final Value<DateTime?> purchasedAt;
   const SavingsGoalsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -426,6 +478,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     this.colorValue = const Value.absent(),
     this.productUrl = const Value.absent(),
     this.archived = const Value.absent(),
+    this.purchasedAt = const Value.absent(),
   });
   SavingsGoalsCompanion.insert({
     this.id = const Value.absent(),
@@ -436,6 +489,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     this.colorValue = const Value.absent(),
     this.productUrl = const Value.absent(),
     this.archived = const Value.absent(),
+    this.purchasedAt = const Value.absent(),
   }) : name = Value(name),
        targetAmount = Value(targetAmount);
   static Insertable<SavingsGoal> custom({
@@ -447,6 +501,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     Expression<int>? colorValue,
     Expression<String>? productUrl,
     Expression<bool>? archived,
+    Expression<DateTime>? purchasedAt,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -457,6 +512,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       if (colorValue != null) 'color_value': colorValue,
       if (productUrl != null) 'product_url': productUrl,
       if (archived != null) 'archived': archived,
+      if (purchasedAt != null) 'purchased_at': purchasedAt,
     });
   }
 
@@ -469,6 +525,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     Value<int?>? colorValue,
     Value<String?>? productUrl,
     Value<bool>? archived,
+    Value<DateTime?>? purchasedAt,
   }) {
     return SavingsGoalsCompanion(
       id: id ?? this.id,
@@ -479,6 +536,7 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
       colorValue: colorValue ?? this.colorValue,
       productUrl: productUrl ?? this.productUrl,
       archived: archived ?? this.archived,
+      purchasedAt: purchasedAt ?? this.purchasedAt,
     );
   }
 
@@ -509,6 +567,9 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
     if (archived.present) {
       map['archived'] = Variable<bool>(archived.value);
     }
+    if (purchasedAt.present) {
+      map['purchased_at'] = Variable<DateTime>(purchasedAt.value);
+    }
     return map;
   }
 
@@ -522,7 +583,8 @@ class SavingsGoalsCompanion extends UpdateCompanion<SavingsGoal> {
           ..write('iconKey: $iconKey, ')
           ..write('colorValue: $colorValue, ')
           ..write('productUrl: $productUrl, ')
-          ..write('archived: $archived')
+          ..write('archived: $archived, ')
+          ..write('purchasedAt: $purchasedAt')
           ..write(')'))
         .toString();
   }
@@ -1253,6 +1315,7 @@ typedef $$SavingsGoalsTableCreateCompanionBuilder =
       Value<int?> colorValue,
       Value<String?> productUrl,
       Value<bool> archived,
+      Value<DateTime?> purchasedAt,
     });
 typedef $$SavingsGoalsTableUpdateCompanionBuilder =
     SavingsGoalsCompanion Function({
@@ -1264,6 +1327,7 @@ typedef $$SavingsGoalsTableUpdateCompanionBuilder =
       Value<int?> colorValue,
       Value<String?> productUrl,
       Value<bool> archived,
+      Value<DateTime?> purchasedAt,
     });
 
 final class $$SavingsGoalsTableReferences
@@ -1335,6 +1399,11 @@ class $$SavingsGoalsTableFilterComposer
 
   ColumnFilters<bool> get archived => $composableBuilder(
     column: $table.archived,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get purchasedAt => $composableBuilder(
+    column: $table.purchasedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1412,6 +1481,11 @@ class $$SavingsGoalsTableOrderingComposer
     column: $table.archived,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<DateTime> get purchasedAt => $composableBuilder(
+    column: $table.purchasedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SavingsGoalsTableAnnotationComposer
@@ -1452,6 +1526,11 @@ class $$SavingsGoalsTableAnnotationComposer
 
   GeneratedColumn<bool> get archived =>
       $composableBuilder(column: $table.archived, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get purchasedAt => $composableBuilder(
+    column: $table.purchasedAt,
+    builder: (column) => column,
+  );
 
   Expression<T> allocationsRefs<T extends Object>(
     Expression<T> Function($$AllocationsTableAnnotationComposer a) f,
@@ -1515,6 +1594,7 @@ class $$SavingsGoalsTableTableManager
                 Value<int?> colorValue = const Value.absent(),
                 Value<String?> productUrl = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
+                Value<DateTime?> purchasedAt = const Value.absent(),
               }) => SavingsGoalsCompanion(
                 id: id,
                 name: name,
@@ -1524,6 +1604,7 @@ class $$SavingsGoalsTableTableManager
                 colorValue: colorValue,
                 productUrl: productUrl,
                 archived: archived,
+                purchasedAt: purchasedAt,
               ),
           createCompanionCallback:
               ({
@@ -1535,6 +1616,7 @@ class $$SavingsGoalsTableTableManager
                 Value<int?> colorValue = const Value.absent(),
                 Value<String?> productUrl = const Value.absent(),
                 Value<bool> archived = const Value.absent(),
+                Value<DateTime?> purchasedAt = const Value.absent(),
               }) => SavingsGoalsCompanion.insert(
                 id: id,
                 name: name,
@@ -1544,6 +1626,7 @@ class $$SavingsGoalsTableTableManager
                 colorValue: colorValue,
                 productUrl: productUrl,
                 archived: archived,
+                purchasedAt: purchasedAt,
               ),
           withReferenceMapper: (p0) => p0
               .map(

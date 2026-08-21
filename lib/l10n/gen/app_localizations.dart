@@ -392,6 +392,24 @@ abstract class AppLocalizations {
   /// **'Price found: {price}'**
   String goalFormPriceFound(String price);
 
+  /// No description provided for @goalFormAlreadyPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Already purchased'**
+  String get goalFormAlreadyPurchased;
+
+  /// No description provided for @goalFormAlreadyPurchasedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You already paid for this out of pocket and are settling it with money you save later – say, from an eBay sale or a cash gift.'**
+  String get goalFormAlreadyPurchasedHint;
+
+  /// No description provided for @goalFormPurchaseDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase date'**
+  String get goalFormPurchaseDate;
+
   /// No description provided for @iconPickerTitle.
   ///
   /// In en, this message translates to:
@@ -572,6 +590,12 @@ abstract class AppLocalizations {
   /// **'Assign'**
   String get detailAssignFab;
 
+  /// No description provided for @detailSettleFab.
+  ///
+  /// In en, this message translates to:
+  /// **'Settle up'**
+  String get detailSettleFab;
+
   /// No description provided for @detailOfAmount.
   ///
   /// In en, this message translates to:
@@ -584,11 +608,29 @@ abstract class AppLocalizations {
   /// **'Goal reached 🎉'**
   String get detailGoalReached;
 
+  /// No description provided for @detailPurchaseSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'Fully settled 🎉'**
+  String get detailPurchaseSettled;
+
   /// No description provided for @detailRemaining.
   ///
   /// In en, this message translates to:
   /// **'{amount} to go'**
   String detailRemaining(String amount);
+
+  /// No description provided for @detailStillToSettle.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} still to settle'**
+  String detailStillToSettle(String amount);
+
+  /// No description provided for @detailPurchasedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased on {date}'**
+  String detailPurchasedOn(String date);
 
   /// No description provided for @detailProgressSemantics.
   ///
@@ -691,6 +733,12 @@ abstract class AppLocalizations {
   /// **'goal reached'**
   String get goalCardReached;
 
+  /// No description provided for @goalCardSettled.
+  ///
+  /// In en, this message translates to:
+  /// **'fully settled'**
+  String get goalCardSettled;
+
   /// No description provided for @goalCardPercent.
   ///
   /// In en, this message translates to:
@@ -702,6 +750,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{allocated} of {target}'**
   String goalCardOf(String allocated, String target);
+
+  /// No description provided for @goalPurchasedBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get goalPurchasedBadge;
 
   /// No description provided for @widgetTargetOf.
   ///
@@ -840,6 +894,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Birthday'**
   String get sourceBirthday;
+
+  /// No description provided for @sourceGift.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get sourceGift;
 
   /// No description provided for @sourceEbay.
   ///

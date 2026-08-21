@@ -55,6 +55,9 @@
   "goalFormColor": "Farbe",
   "goalFormCreate": "Anlegen",
   "goalFormPriceFound": "Preis gefunden: {price}",
+  "goalFormAlreadyPurchased": "Bereits gekauft",
+  "goalFormAlreadyPurchasedHint": "Du hast das schon aus eigener Tasche bezahlt und gleichst es jetzt mit später gespartem Geld aus – etwa aus einem eBay-Verkauf oder einem Geldgeschenk.",
+  "goalFormPurchaseDate": "Kaufdatum",
 
   "iconPickerTitle": "Symbol auswählen",
   "iconPickerButtonTooltip": "Symbol auswählen",
@@ -89,9 +92,13 @@
   "detailEmptySubtitle": "Teile diesem Ziel Geld vom Sparkonto zu.",
   "detailAllocationDeleted": "Zuteilung gelöscht",
   "detailAssignFab": "Zuteilen",
+  "detailSettleFab": "Ausgleichen",
   "detailOfAmount": "von {amount}",
   "detailGoalReached": "Ziel erreicht 🎉",
+  "detailPurchaseSettled": "Vollständig ausgeglichen 🎉",
   "detailRemaining": "Noch {amount}",
+  "detailStillToSettle": "Noch {amount} auszugleichen",
+  "detailPurchasedOn": "Gekauft am {date}",
   "detailProgressSemantics": "Fortschritt {percent} Prozent",
   "detailOpenProductPage": "Produktseite öffnen",
   "detailRefreshPrice": "Preis aktualisieren",
@@ -111,8 +118,10 @@
 
   "goalCardSemantics": "{name}, {allocated} von {target}, {progress}",
   "goalCardReached": "Ziel erreicht",
+  "goalCardSettled": "Vollständig ausgeglichen",
   "goalCardPercent": "{percent} Prozent",
   "goalCardOf": "{allocated} von {target}",
+  "goalPurchasedBadge": "Gekauft",
 
   "widgetTargetOf": "von {target}",
   "widgetRemaining": "noch {amount}",
@@ -139,6 +148,7 @@
   "settingsOpen": "Einstellungen",
 
   "sourceBirthday": "Geburtstag",
+  "sourceGift": "Geschenk",
   "sourceEbay": "eBay",
   "sourcePocketMoney": "Taschengeld",
   "sourceOther": "Sonstiges",

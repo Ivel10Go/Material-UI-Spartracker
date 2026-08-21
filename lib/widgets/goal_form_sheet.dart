@@ -18,6 +18,7 @@ class GoalFormResult {
     required this.iconKey,
     required this.color,
     required this.productUrl,
+    required this.purchasedAt,
   });
 
   final String name;
@@ -25,6 +26,10 @@ class GoalFormResult {
   final String iconKey;
   final Color color;
   final String? productUrl;
+
+  /// Gesetzt, wenn das Produkt schon aus eigener Tasche gekauft wurde und
+  /// jetzt mit späterem Geld ausgeglichen werden soll.
+  final DateTime? purchasedAt;
 }
 
 /// BottomSheet zum Anlegen oder Bearbeiten eines Sparziels.
@@ -36,6 +41,7 @@ class GoalFormSheet extends ConsumerStatefulWidget {
     this.initialIconKey,
     this.initialColor,
     this.initialProductUrl,
+    this.initialPurchasedAt,
   });
 
   final String? initialName;
@@ -43,6 +49,7 @@ class GoalFormSheet extends ConsumerStatefulWidget {
   final String? initialIconKey;
   final Color? initialColor;
   final String? initialProductUrl;
+  final DateTime? initialPurchasedAt;
 
   static Future<GoalFormResult?> show(
     BuildContext context, {
@@ -51,6 +58,7 @@ class GoalFormSheet extends ConsumerStatefulWidget {
     String? initialIconKey,
     Color? initialColor,
     String? initialProductUrl,
+    DateTime? initialPurchasedAt,
   }) {
     return showModalBottomSheet<GoalFormResult>(
       context: context,
@@ -62,6 +70,7 @@ class GoalFormSheet extends ConsumerStatefulWidget {
         initialIconKey: initialIconKey,
         initialColor: initialColor,
         initialProductUrl: initialProductUrl,
+        initialPurchasedAt: initialPurchasedAt,
       ),
     );
   }
@@ -77,6 +86,7 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
   late final TextEditingController _urlController;
   late String _selectedIconKey;
   late Color _selectedColor;
+  late DateTime? _purchasedAt;
 
   bool _lookingUpPrice = false;
 
@@ -96,6 +106,7 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
     );
     _selectedIconKey = widget.initialIconKey ?? kDefaultGoalIconKey;
     _selectedColor = widget.initialColor ?? kGoalColorChoices.first.color;
+    _purchasedAt = widget.initialPurchasedAt;
   }
 
   @override
@@ -155,6 +166,16 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
     return clean.length <= 60 ? clean : '${clean.substring(0, 57)}...';
   }
 
+  Future<void> _pickPurchaseDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _purchasedAt ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) setState(() => _purchasedAt = picked);
+  }
+
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
     final amount = double.parse(_amountController.text.replaceAll(',', '.'));
@@ -167,6 +188,7 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
         iconKey: _selectedIconKey,
         color: _selectedColor,
         productUrl: url.isEmpty ? null : url,
+        purchasedAt: _purchasedAt,
       ),
     );
   }
@@ -266,6 +288,33 @@ class _GoalFormSheetState extends ConsumerState<GoalFormSheet> {
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
+            const SizedBox(height: Spacing.lg),
+            // Für Produkte, die schon aus eigener Tasche bezahlt wurden -
+            // die Zuteilung gleicht den vorgestreckten Betrag dann später
+            // aus, statt auf den Kauf hinzusparen.
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(t.goalFormAlreadyPurchased),
+              subtitle: Text(t.goalFormAlreadyPurchasedHint),
+              value: _purchasedAt != null,
+              onChanged: (value) {
+                setState(() => _purchasedAt = value ? DateTime.now() : null);
+              },
+            ),
+            if (_purchasedAt != null) ...[
+              const SizedBox(height: Spacing.sm),
+              InkWell(
+                onTap: _pickPurchaseDate,
+                borderRadius: Corner.largeAll,
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: t.goalFormPurchaseDate,
+                    suffixIcon: const Icon(Icons.calendar_today),
+                  ),
+                  child: Text(Formats.of(context).date(_purchasedAt!)),
+                ),
+              ),
+            ],
             const SizedBox(height: Spacing.lg),
             Text(t.goalFormColor, style: theme.textTheme.titleSmall),
             const SizedBox(height: Spacing.xs),

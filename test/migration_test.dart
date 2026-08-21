@@ -117,6 +117,11 @@ void main() {
     expect(columnNames, contains('icon_key'));
     expect(columnNames, isNot(contains('emoji')));
     expect(columnNames, isNot(contains('icon_code_point')));
+
+    // Schema v3 -> v4 fügt die (nullable) Spalte für bereits gekaufte
+    // Produkte hinzu, ohne bestehende Ziele zu beeinflussen.
+    expect(columnNames, contains('purchased_at'));
+    expect(goals.single.purchasedAt, null);
   });
 
   test('Frisch angelegte Datenbank nutzt direkt Schema v2', () async {

@@ -170,6 +170,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get goalFormAlreadyPurchased => 'Bereits gekauft';
+
+  @override
+  String get goalFormAlreadyPurchasedHint =>
+      'Du hast das schon aus eigener Tasche bezahlt und gleichst es jetzt mit später gespartem Geld aus – etwa aus einem eBay-Verkauf oder einem Geldgeschenk.';
+
+  @override
+  String get goalFormPurchaseDate => 'Kaufdatum';
+
+  @override
   String get iconPickerTitle => 'Symbol auswählen';
 
   @override
@@ -276,6 +286,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get detailAssignFab => 'Zuteilen';
 
   @override
+  String get detailSettleFab => 'Ausgleichen';
+
+  @override
   String detailOfAmount(String amount) {
     return 'von $amount';
   }
@@ -284,8 +297,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get detailGoalReached => 'Ziel erreicht 🎉';
 
   @override
+  String get detailPurchaseSettled => 'Vollständig ausgeglichen 🎉';
+
+  @override
   String detailRemaining(String amount) {
     return 'Noch $amount';
+  }
+
+  @override
+  String detailStillToSettle(String amount) {
+    return 'Noch $amount auszugleichen';
+  }
+
+  @override
+  String detailPurchasedOn(String date) {
+    return 'Gekauft am $date';
   }
 
   @override
@@ -358,6 +384,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get goalCardReached => 'Ziel erreicht';
 
   @override
+  String get goalCardSettled => 'Vollständig ausgeglichen';
+
+  @override
   String goalCardPercent(int percent) {
     return '$percent Prozent';
   }
@@ -366,6 +395,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String goalCardOf(String allocated, String target) {
     return '$allocated von $target';
   }
+
+  @override
+  String get goalPurchasedBadge => 'Gekauft';
 
   @override
   String widgetTargetOf(String target) {
@@ -442,6 +474,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get sourceBirthday => 'Geburtstag';
+
+  @override
+  String get sourceGift => 'Geschenk';
 
   @override
   String get sourceEbay => 'eBay';

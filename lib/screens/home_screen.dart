@@ -35,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
             iconKey: Value(result.iconKey),
             colorValue: Value(result.color.toARGB32()),
             productUrl: Value(result.productUrl),
+            purchasedAt: Value(result.purchasedAt),
           ),
         );
 

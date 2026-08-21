@@ -170,6 +170,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get goalFormAlreadyPurchased => 'Already purchased';
+
+  @override
+  String get goalFormAlreadyPurchasedHint =>
+      'You already paid for this out of pocket and are settling it with money you save later – say, from an eBay sale or a cash gift.';
+
+  @override
+  String get goalFormPurchaseDate => 'Purchase date';
+
+  @override
   String get iconPickerTitle => 'Choose a symbol';
 
   @override
@@ -276,6 +286,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detailAssignFab => 'Assign';
 
   @override
+  String get detailSettleFab => 'Settle up';
+
+  @override
   String detailOfAmount(String amount) {
     return 'of $amount';
   }
@@ -284,8 +297,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get detailGoalReached => 'Goal reached 🎉';
 
   @override
+  String get detailPurchaseSettled => 'Fully settled 🎉';
+
+  @override
   String detailRemaining(String amount) {
     return '$amount to go';
+  }
+
+  @override
+  String detailStillToSettle(String amount) {
+    return '$amount still to settle';
+  }
+
+  @override
+  String detailPurchasedOn(String date) {
+    return 'Purchased on $date';
   }
 
   @override
@@ -358,6 +384,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get goalCardReached => 'goal reached';
 
   @override
+  String get goalCardSettled => 'fully settled';
+
+  @override
   String goalCardPercent(int percent) {
     return '$percent percent';
   }
@@ -366,6 +395,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String goalCardOf(String allocated, String target) {
     return '$allocated of $target';
   }
+
+  @override
+  String get goalPurchasedBadge => 'Purchased';
 
   @override
   String widgetTargetOf(String target) {
@@ -442,6 +474,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sourceBirthday => 'Birthday';
+
+  @override
+  String get sourceGift => 'Gift';
 
   @override
   String get sourceEbay => 'eBay';

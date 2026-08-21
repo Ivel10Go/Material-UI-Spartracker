@@ -132,6 +132,7 @@ class GoalDetailScreen extends ConsumerWidget {
       initialIconKey: goal.iconKey,
       initialColor: goalColorFromValue(goal.colorValue),
       initialProductUrl: goal.productUrl,
+      initialPurchasedAt: goal.purchasedAt,
     );
     if (result == null) return;
 
@@ -147,6 +148,7 @@ class GoalDetailScreen extends ConsumerWidget {
             productUrl: Value(result.productUrl),
             createdAt: Value(goal.createdAt),
             archived: Value(goal.archived),
+            purchasedAt: Value(result.purchasedAt),
           ),
         );
   }
@@ -181,6 +183,7 @@ class GoalDetailScreen extends ConsumerWidget {
               productUrl: Value(goal.productUrl),
               createdAt: Value(goal.createdAt),
               archived: Value(goal.archived),
+              purchasedAt: Value(goal.purchasedAt),
             ),
           );
       messenger.showSnackBar(
@@ -503,7 +506,11 @@ class GoalDetailScreen extends ConsumerWidget {
                 totalAsync.valueOrNull ?? 0,
               ),
               icon: const Icon(Icons.add),
-              label: Text(t.detailAssignFab),
+              label: Text(
+                goalAsync.value!.purchasedAt != null
+                    ? t.detailSettleFab
+                    : t.detailAssignFab,
+              ),
             )
           : null,
     );
@@ -531,6 +538,7 @@ class _ProgressHeader extends StatelessWidget {
       0.0,
       double.infinity,
     );
+    final isPurchased = goal.purchasedAt != null;
 
     return Card(
       child: Padding(
@@ -540,6 +548,38 @@ class _ProgressHeader extends StatelessWidget {
         ),
         child: Column(
           children: [
+            if (isPurchased) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Spacing.md,
+                  vertical: Spacing.xs,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  borderRadius: Corner.full,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.receipt_long,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+                    const SizedBox(width: Spacing.xxs),
+                    Text(
+                      t.detailPurchasedOn(formats.date(goal.purchasedAt!)),
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onTertiaryContainer,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: Spacing.lg),
+            ],
             // Der Ring ist rein visuell; die Zahlen darunter tragen die
             // Information. Für Screenreader wird er deshalb zu einem
             // einzigen, sprechenden Element zusammengefasst.
@@ -613,8 +653,10 @@ class _ProgressHeader extends StatelessWidget {
               ),
               child: Text(
                 remaining <= 0
-                    ? t.detailGoalReached
-                    : t.detailRemaining(formats.money(remaining)),
+                    ? (isPurchased ? t.detailPurchaseSettled : t.detailGoalReached)
+                    : (isPurchased
+                          ? t.detailStillToSettle(formats.money(remaining))
+                          : t.detailRemaining(formats.money(remaining))),
                 style: theme.textTheme.labelLarge?.copyWith(
                   color: palette.onContainer,
                 ),

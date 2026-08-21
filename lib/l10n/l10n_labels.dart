@@ -118,6 +118,7 @@ extension L10nLabels on AppLocalizations {
   /// Vorschläge für die Quelle einer Buchung.
   List<String> get entrySourceSuggestions => [
     sourceBirthday,
+    sourceGift,
     sourceEbay,
     sourcePocketMoney,
     sourceOther,

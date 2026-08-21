@@ -33,18 +33,29 @@ class GoalCard extends StatelessWidget {
         : (allocatedAmount / goal.targetAmount).clamp(0.0, 1.0);
     final percent = (progress * 100).round();
     final isDone = progress >= 1.0;
+    final isPurchased = goal.purchasedAt != null;
+    final statusLabel = isDone
+        ? (isPurchased ? t.goalCardSettled : t.goalCardReached)
+        : t.goalCardPercent(percent);
 
     // Die Karte wird als *ein* Element vorgelesen - sonst hört man
     // Emoji, Name, Beträge und Prozentzahl als vier lose Fragmente.
     return Semantics(
       container: true,
       button: true,
-      label: t.goalCardSemantics(
-        goal.name,
-        formats.money(allocatedAmount),
-        formats.money(goal.targetAmount),
-        isDone ? t.goalCardReached : t.goalCardPercent(percent),
-      ),
+      label: isPurchased
+          ? '${t.goalPurchasedBadge}. ${t.goalCardSemantics(
+              goal.name,
+              formats.money(allocatedAmount),
+              formats.money(goal.targetAmount),
+              statusLabel,
+            )}'
+          : t.goalCardSemantics(
+              goal.name,
+              formats.money(allocatedAmount),
+              formats.money(goal.targetAmount),
+              statusLabel,
+            ),
       excludeSemantics: true,
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -96,6 +107,10 @@ class GoalCard extends StatelessWidget {
                               ],
                             ],
                           ),
+                          if (isPurchased) ...[
+                            const SizedBox(height: Spacing.xxs),
+                            _PurchasedBadge(label: t.goalPurchasedBadge),
+                          ],
                           const SizedBox(height: Spacing.xxs),
                           Text(
                             t.goalCardOf(
@@ -147,6 +162,42 @@ class GoalCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Kleine, tonale Markierung für Sparziele, die bereits gekauft wurden und
+/// nur noch mit späterem Geld ausgeglichen werden.
+///
+/// Eine eigene tertiäre Farbrolle statt der Ziel-Palette, damit sich der
+/// Status auch bei kräftigen Ziel-Farben klar abhebt.
+class _PurchasedBadge extends StatelessWidget {
+  const _PurchasedBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: Spacing.xs, vertical: 2),
+      decoration: BoxDecoration(
+        color: scheme.tertiaryContainer,
+        borderRadius: Corner.full,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.receipt_long, size: 12, color: scheme.onTertiaryContainer),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: scheme.onTertiaryContainer,
+            ),
+          ),
+        ],
       ),
     );
   }

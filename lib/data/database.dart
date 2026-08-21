@@ -35,6 +35,15 @@ class SavingsGoals extends Table {
   TextColumn get productUrl => text().nullable()();
 
   BoolColumn get archived => boolean().withDefault(const Constant(false))();
+
+  /// Datum, an dem das Produkt schon gekauft wurde - unabhängig vom
+  /// bisherigen Sparfortschritt.
+  ///
+  /// Ist dieses Feld gesetzt, wurde das Ziel bereits aus eigener Tasche
+  /// bezahlt. Spätere Zuteilungen (z. B. aus einem eBay-Verkauf oder einem
+  /// Geldgeschenk) gleichen den vorgestreckten Betrag dann nachträglich
+  /// aus, statt auf den Kauf hinzusparen.
+  DateTimeColumn get purchasedAt => dateTime().nullable()();
 }
 
 /// Ein- und Auszahlungen auf das zentrale Sparkonto.
@@ -80,7 +89,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -92,7 +101,16 @@ class AppDatabase extends _$AppDatabase {
         await _migrateToCentralAccount(m);
       }
       if (from < 3) {
+        // Die Spalte muss schon existieren, bevor _migrateEmojiToIconKey
+        // die Tabelle per TableMigration neu aufbaut: Der Rebuild kopiert
+        // anhand des *aktuellen* Dart-Modells, das purchasedAt bereits
+        // kennt - ohne die Spalte schlägt die Kopie fehl.
+        if (from < 4) {
+          await m.addColumn(savingsGoals, savingsGoals.purchasedAt);
+        }
         await _migrateEmojiToIconKey(m);
+      } else if (from < 4) {
+        await m.addColumn(savingsGoals, savingsGoals.purchasedAt);
       }
     },
     beforeOpen: (details) async {

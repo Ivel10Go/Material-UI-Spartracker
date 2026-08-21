@@ -78,6 +78,9 @@
   "@goalFormPriceFound": {
     "placeholders": { "price": { "type": "String" } }
   },
+  "goalFormAlreadyPurchased": "Already purchased",
+  "goalFormAlreadyPurchasedHint": "You already paid for this out of pocket and are settling it with money you save later – say, from an eBay sale or a cash gift.",
+  "goalFormPurchaseDate": "Purchase date",
 
   "iconPickerTitle": "Choose a symbol",
   "iconPickerButtonTooltip": "Choose a symbol",
@@ -130,14 +133,24 @@
   "detailEmptySubtitle": "Assign money from your savings account to this goal.",
   "detailAllocationDeleted": "Allocation deleted",
   "detailAssignFab": "Assign",
+  "detailSettleFab": "Settle up",
   "detailOfAmount": "of {amount}",
   "@detailOfAmount": {
     "placeholders": { "amount": { "type": "String" } }
   },
   "detailGoalReached": "Goal reached 🎉",
+  "detailPurchaseSettled": "Fully settled 🎉",
   "detailRemaining": "{amount} to go",
   "@detailRemaining": {
     "placeholders": { "amount": { "type": "String" } }
+  },
+  "detailStillToSettle": "{amount} still to settle",
+  "@detailStillToSettle": {
+    "placeholders": { "amount": { "type": "String" } }
+  },
+  "detailPurchasedOn": "Purchased on {date}",
+  "@detailPurchasedOn": {
+    "placeholders": { "date": { "type": "String" } }
   },
   "detailProgressSemantics": "Progress {percent} percent",
   "@detailProgressSemantics": {
@@ -193,6 +206,7 @@
     }
   },
   "goalCardReached": "goal reached",
+  "goalCardSettled": "fully settled",
   "goalCardPercent": "{percent} percent",
   "@goalCardPercent": {
     "placeholders": { "percent": { "type": "int" } }
@@ -204,6 +218,7 @@
       "target": { "type": "String" }
     }
   },
+  "goalPurchasedBadge": "Purchased",
 
   "widgetTargetOf": "of {target}",
   "@widgetTargetOf": {
@@ -236,6 +251,7 @@
   "settingsOpen": "Settings",
 
   "sourceBirthday": "Birthday",
+  "sourceGift": "Gift",
   "sourceEbay": "eBay",
   "sourcePocketMoney": "Pocket money",
   "sourceOther": "Other",
