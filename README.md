@@ -1,4 +1,4 @@
-# Spartracker
+# Saving App
 
 A Flutter app for saving towards several goals — using **one shared account**
 instead of separate jars. You deposit money once, then allocate it freely
@@ -9,9 +9,10 @@ Fully offline. No account, no cloud. All data stays on the device.
 Available in **English and German**, switchable in the app.
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/a3317148-fc3f-4572-829b-37f4c5d8d057" width="30%" alt="Home screen with account balance and goals" />
+<img src="https://github.com/user-attachments/assets/795042e2-e234-4239-a44e-58771b6f1924" width="30%" alt="Account screen with transaction history" />       
 <img src="https://github.com/user-attachments/assets/f390052a-d9d6-4f96-ab25-e84b7b34cccc" width="30%" alt="Goal detail screen with progress ring and allocations" />
-<img src="https://github.com/user-attachments/assets/795042e2-e234-4239-a44e-58771b6f1924" width="30%" alt="Account screen with transaction history" />
+<img src="https://github.com/user-attachments/assets/a3317148-fc3f-4572-829b-37f4c5d8d057" width="30%" alt="Home screen with account balance and goals" />
+
 </p>
 
 *(Amounts blurred out on purpose — these are screenshots of my own, real
